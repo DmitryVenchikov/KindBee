@@ -1,0 +1,94 @@
+﻿using KindBee.DB.DAL;
+using KindBee.DB.DBModels;
+using KindBee.DB.Interfaces;
+using KindBee.Models;
+using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
+
+namespace KindBee.Controllers
+{
+    public class CustomerController : Controller
+    {
+        private readonly ILogger<CustomerController> _logger;
+
+        IDataAccess<Customer> dal;
+
+        public IActionResult Index()
+        {
+            return View();
+        }
+
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult Error()
+        {
+            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        public CustomerController(IDataAccess<Customer> dal, ILogger<CustomerController> logger)
+        {
+            _logger = logger;
+            dal = dal;
+        }
+
+        [HttpGet(Name = "GetAllItems")]
+        public IEnumerable<Customer> Get()
+        {
+            return dal.Get();
+        }
+
+        [HttpGet("{id}", Name = "GetCustomer")]
+        public IActionResult Get(int Id)
+        {
+            Customer Customer = dal.Get(Id);
+
+            if (Customer == null)
+            {
+                return NotFound();
+            }
+
+            return new ObjectResult(Customer);
+        }
+
+        [HttpPost]
+        public IActionResult Create([FromBody] Customer Customer)
+        {
+            if (Customer == null)
+            {
+                return BadRequest();
+            }
+            dal.Add(Customer);
+            return CreatedAtRoute("GetCustomer", new { id = Customer.Id }, Customer);
+        }
+
+        [HttpPut("{id}")]
+        public IActionResult Update(int Id, [FromBody] Customer updatedCustomer)
+        {
+            if (updatedCustomer == null || updatedCustomer.Id != Id)
+            {
+                return BadRequest();
+            }
+
+            var Customer = dal.Get(Id);
+            if (Customer == null)
+            {
+                return NotFound();
+            }
+
+            dal.Update(updatedCustomer);
+            return RedirectToRoute("GetAllItems");
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult Delete(int Id)
+        {
+            var deletedCustomer = dal.Delete(Id);
+
+            if (deletedCustomer == null)
+            {
+                return BadRequest();
+            }
+
+            return new ObjectResult(deletedCustomer);
+        }
+    }
+}
