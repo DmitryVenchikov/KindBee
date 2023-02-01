@@ -18,12 +18,12 @@ namespace KindBee.DB
         }
         public KindBeeDBContext(DbContextOptions<KindBeeDBContext> options) : base(options)
         {
-            Database.EnsureDeleted();   // удаляем бд со старой схемой
-            Database.EnsureCreated();   // создаем бд с новой схемой
+            //Database.EnsureDeleted();   // удаляем бд со старой схемой
+            //Database.EnsureCreated();   // создаем бд с новой схемой
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Data Source=DESKTOP-VHEI76T;Initial Catalog=Dokin1;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
+            optionsBuilder.UseSqlServer("Data Source=DESKTOP-VHEI76T;Initial Catalog=KindBee;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using KindBee.DB.DAL;
+﻿using KindBee.DB;
+using KindBee.DB.DAL;
 using KindBee.DB.DBModels;
 using KindBee.DB.Interfaces;
 using KindBee.Models;
@@ -24,10 +25,10 @@ namespace KindBee.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        public CustomerController(IDataAccess<Customer> dal, ILogger<CustomerController> logger)
+        public CustomerController(KindBeeDBContext kindBeeDBContext, ILogger<CustomerController> logger)
         {
             _logger = logger;
-            dal = dal;
+            dal = new CustomerDAL(kindBeeDBContext);
         }
 
         [HttpGet(Name = "GetAllItems")]
@@ -57,7 +58,7 @@ namespace KindBee.Controllers
                 return BadRequest();
             }
             dal.Add(Customer);
-            return CreatedAtRoute("GetCustomer", new { id = Customer.Id }, Customer);
+            return RedirectToAction("Index", "Home");
         }
 
         [HttpPut("{id}")]

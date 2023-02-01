@@ -12,6 +12,7 @@ namespace KindBee.DB.DAL
         public void Add(Customer item)
         {
             context.Customers.Add(item);
+            context.SaveChanges();
         }
 
         public Customer Delete(int id)

@@ -12,6 +12,7 @@ namespace KindBee.DB.DBModels
         public DateTime DateOfManufacture { get; set; }
         [Precision(18, 2)]
         public decimal Price { get; set; }
-        public virtual ICollection<Basket>? OrdersAndPeriods { get; set; }
+        public virtual ICollection<Order>? Orders { get; set; }
+        public virtual ICollection<Basket>? Baskets { get; set; }
     }
 }

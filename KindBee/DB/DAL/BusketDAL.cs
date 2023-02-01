@@ -3,15 +3,16 @@ using KindBee.DB.Interfaces;
 
 namespace KindBee.DB.DAL
 {
-    public class BusketDAL : IDataAccess<Basket>
+    public class BasketDAL : IDataAccess<Basket>
     {
         KindBeeDBContext context;
-        public BusketDAL(KindBeeDBContext kindBeeDBContext) {
+        public BasketDAL(KindBeeDBContext kindBeeDBContext) {
             context = kindBeeDBContext;
         }
         public void Add(Basket item)
         {
             context.Baskets.Add(item);
+            context.SaveChanges();
         }
 
         public Basket Delete(int id)

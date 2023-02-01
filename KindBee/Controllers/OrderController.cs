@@ -12,7 +12,6 @@ namespace KindBee.Controllers
         private readonly ILogger<OrderController> _logger;
 
         IDataAccess<Order> dal;
-
         public IActionResult Index()
         {
             return View();
