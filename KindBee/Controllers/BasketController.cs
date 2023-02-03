@@ -12,11 +12,33 @@ namespace KindBee.Controllers
     {
         private readonly ILogger<BasketController> _logger;
 
-        IDataAccess<Basket> dal;
-
+        IDataAccess<Basket> basketDAL;
+        IDataAccess<Customer> customerDAL;
+        IDataAccess<Position> positionDAL;
+        IDataAccess<Product> productDAL;
+        public BasketController(KindBeeDBContext kindBeeDBContext, ILogger<BasketController> logger)
+        {
+            _logger = logger;
+            basketDAL = new BasketDAL(kindBeeDBContext);
+            customerDAL = new CustomerDAL(kindBeeDBContext);
+            positionDAL = new PositionDAL(kindBeeDBContext);
+            productDAL = new ProductDAL(kindBeeDBContext);
+        }
         public IActionResult Index()
         {
-            return View();
+            int id;
+
+            if (int.TryParse(HttpContext.User.Claims.ToList().First().Value, out id))
+            {
+                var customer = customerDAL.Get(id);
+                if (customer != null) //если такой клиент существует
+                {
+                    var model = customer.Basket;
+                    return View(model);
+                }
+                return RedirectToAction("Error", "Home");
+            }
+            return RedirectToAction("Error", "Home");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
@@ -25,22 +47,41 @@ namespace KindBee.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        public BasketController(KindBeeDBContext kindBeeDBContext, ILogger<BasketController> logger)
+     
+        [HttpGet(Name = "DeleteAllPositions")]
+        public IActionResult DeleteAllPositions()
         {
-            _logger = logger;
-            dal = new BasketDAL(kindBeeDBContext);
-        }
+            int id;
 
+            if (int.TryParse(HttpContext.User.Claims.ToList().First().Value, out id))
+            {
+                var customer = customerDAL.Get(id);
+                if (customer != null) //если такой клиент существует
+                {
+                    if (customer.Basket.Positions!=null)
+                    {
+                        foreach (var t in customer.Basket.Positions)
+                        {
+                            customer.Basket.Positions.Remove(t);
+                        }
+                    }
+                    return View(customer.Basket);
+                }
+                return RedirectToAction("Error", "Home");
+            }
+            return RedirectToAction("Error", "Home");
+          
+        }
         [HttpGet(Name = "GetAllItems")]
         public IEnumerable<Basket> Get()
         {
-            return dal.Get();
+            return basketDAL.Get();
         }
 
         [HttpGet("{id}", Name = "GetBasket")]
         public IActionResult Get(int Id)
         {
-            Basket Basket = dal.Get(Id);
+            Basket Basket = basketDAL.Get(Id);
 
             if (Basket == null)
             {
@@ -50,6 +91,7 @@ namespace KindBee.Controllers
             return new ObjectResult(Basket);
         }
 
+
         [HttpPost]
         public IActionResult Create([FromBody] Basket Basket)
         {
@@ -57,7 +99,7 @@ namespace KindBee.Controllers
             {
                 return BadRequest();
             }
-            dal.Add(Basket);
+            basketDAL.Add(Basket);
             return CreatedAtRoute("GetBasket", new { id = Basket.Id }, Basket);
         }
 
@@ -69,20 +111,20 @@ namespace KindBee.Controllers
                 return BadRequest();
             }
 
-            var Basket = dal.Get(Id);
+            var Basket = basketDAL.Get(Id);
             if (Basket == null)
             {
                 return NotFound();
             }
 
-            dal.Update(updatedBasket);
+            basketDAL.Update(updatedBasket);
             return RedirectToRoute("GetAllItems");
         }
 
         [HttpDelete("{id}")]
         public IActionResult Delete(int Id)
         {
-            var deletedBasket = dal.Delete(Id);
+            var deletedBasket = basketDAL.Delete(Id);
 
             if (deletedBasket == null)
             {

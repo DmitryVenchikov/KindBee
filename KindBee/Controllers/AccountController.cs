@@ -85,7 +85,7 @@ namespace KindBee.Controllers
                     return RedirectToAction("Index", "Home");
                 }
                 else
-                    ModelState.AddModelError("", "Некорректные логин и(или) пароль");
+                    ModelState.AddModelError("", "Пользователь с таким логином уже существует");
             }
             return View(model);
         }
@@ -116,14 +116,16 @@ namespace KindBee.Controllers
             // создаем один claim
             var claims = new List<Claim>
             {
-                new Claim(ClaimsIdentity.DefaultNameClaimType, user.Login)
-               ,new Claim(ClaimsIdentity.DefaultRoleClaimType, user.Role.ToString())
-               ,new Claim(ClaimsIdentity.DefaultNameClaimType, user.Name.ToString())
-               ,new Claim(ClaimsIdentity.DefaultNameClaimType, user.Id.ToString())
+                new Claim(ClaimsIdentity.DefaultNameClaimType, user.Id.ToString()),
+             //   new Claim(ClaimsIdentity.DefaultNameClaimType, user.Login)
+               new Claim(ClaimsIdentity.DefaultRoleClaimType, user.Role.ToString())
+             //  ,new Claim(ClaimsIdentity.DefaultNameClaimType, user.Name.ToString())
+               
             };
             // создаем объект ClaimsIdentity
             ClaimsIdentity id = new ClaimsIdentity(claims, "ApplicationCookie", ClaimsIdentity.DefaultNameClaimType,
                 ClaimsIdentity.DefaultRoleClaimType);
+
             // установка аутентификационных куки
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(id));
             //var t = HttpContext.User.Claims.ToList().Last().Value;
@@ -135,7 +137,7 @@ namespace KindBee.Controllers
         public async Task<IActionResult> Logout()
         {
             // удаляем аутентификационные куки
-            await HttpContext.SignOutAsync();
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction("Index", "Home");
         }
 

@@ -10,16 +10,17 @@ namespace KindBee.DB
         public DbSet<Order> Orders { get; set; } = null!;
         public DbSet<Product> Products { get; set; } = null!;
         public DbSet<Basket> Baskets { get; set; } = null!;
-       
+        public DbSet<Position> Positions { get; set; } = null!;
+
         public KindBeeDBContext()
         {
-           //Database.EnsureDeleted();   // удаляем бд со старой схемой
-            //Database.EnsureCreated();   // создаем бд с новой схемой
+          //  Database.EnsureDeleted();   // удаляем бд со старой схемой
+          //  Database.EnsureCreated();   // создаем бд с новой схемой
         }
         public KindBeeDBContext(DbContextOptions<KindBeeDBContext> options) : base(options)
         {
-            //Database.EnsureDeleted();   // удаляем бд со старой схемой
-            //Database.EnsureCreated();   // создаем бд с новой схемой
+          //  Database.EnsureDeleted();   // удаляем бд со старой схемой
+          //  Database.EnsureCreated();   // создаем бд с новой схемой
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

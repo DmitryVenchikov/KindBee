@@ -1,0 +1,55 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+@model KindBee.DB.DBModels.Basket;
+
+<head>
+    <link rel="stylesheet" href="~/css/groceryShowcase.css" />
+</head>
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+
+    <h2>Корзина</h2>
+    @if(Model.Positions==null)
+    {
+        <h2>Ваша корзина пуста</h2>
+    }else
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Наименование продукта</th>
+                    <th>Цена за 1 шт.</th>
+                    <th>Остаток</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Positions)
+                {
+                    <tr>
+                        <td>@item.Product.Name</td>
+                        <td>@item.Product.Price</td>
+                        <td>@item.Quantity</td>
+                        <td><a href="@Url.Action("DeleteProductFromBasket", "Home", item.Id)">Удалить</a></td>
+                        <td>
+                            <form asp-action="AddProductInBasket" asp-controller="Home">
+                                <input type="hidden" asp-for="@item.Id" />
+                                <input type="number" asp-for="@item.Quantity" min="1" max="@item.Quantity" />
+                                <button type="submit" class="btn btn-primary">Добавить в корзину</button>
+                            </form>
+                        </td>
+                    </tr>
+                    <tr><td>Итого</td><td>@Model.TotalSum</td></tr>
+                }
+            </tbody>
+        </table>
+        <a href="@Url.Action("DeleteAllPositions", "Basket")">Очистить корзину</a>
+        <a href="@Url.Action("Index", "Order")">Оформить заказ</a>
+    }
+
+   
+    <a href="@Url.Action("Index", "Home")">Перейти на главную</a>
+</div>

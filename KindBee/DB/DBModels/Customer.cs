@@ -10,7 +10,7 @@
         public DateTime DateOfRegistration { get; set; } = DateTime.Now;
         public string Login { get; set; }
         public string Password { get; set; }
-        public string Role { get; set; } = "user";
+        public string Role { get; set; } = "customer";
         public string? Mail { get; set; }
         public string? PhoneNumber { get; set; }
         //public int BasketId { get; set; }

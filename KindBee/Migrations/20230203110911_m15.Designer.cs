@@ -4,6 +4,7 @@ using KindBee.DB;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace KindBee.Migrations
 {
     [DbContext(typeof(KindBeeDBContext))]
-    partial class KindBeeDBContextModelSnapshot : ModelSnapshot
+    [Migration("20230203110911_m15")]
+    partial class m15
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -101,12 +104,14 @@ namespace KindBee.Migrations
                     b.Property<DateTime>("DateOfRegistration")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("PositionId")
+                    b.Property<int>("ProductId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CustomerId");
+
+                    b.HasIndex("ProductId");
 
                     b.ToTable("Orders");
                 });
@@ -122,9 +127,6 @@ namespace KindBee.Migrations
                     b.Property<int>("BasketId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("OrderId")
-                        .HasColumnType("int");
-
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
 
@@ -135,11 +137,9 @@ namespace KindBee.Migrations
 
                     b.HasIndex("BasketId");
 
-                    b.HasIndex("OrderId");
-
                     b.HasIndex("ProductId");
 
-                    b.ToTable("Positions");
+                    b.ToTable("Position");
                 });
 
             modelBuilder.Entity("KindBee.DB.DBModels.Product", b =>
@@ -160,12 +160,9 @@ namespace KindBee.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal?>("Price")
+                    b.Property<decimal>("Price")
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -191,20 +188,24 @@ namespace KindBee.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("KindBee.DB.DBModels.Product", "Product")
+                        .WithMany("Orders")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Customer");
+
+                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("KindBee.DB.DBModels.Position", b =>
                 {
                     b.HasOne("KindBee.DB.DBModels.Basket", "Basket")
-                        .WithMany("Positions")
+                        .WithMany("Products")
                         .HasForeignKey("BasketId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("KindBee.DB.DBModels.Order", "Order")
-                        .WithMany("Positions")
-                        .HasForeignKey("OrderId");
 
                     b.HasOne("KindBee.DB.DBModels.Product", "Product")
                         .WithMany("Baskets")
@@ -214,14 +215,12 @@ namespace KindBee.Migrations
 
                     b.Navigation("Basket");
 
-                    b.Navigation("Order");
-
                     b.Navigation("Product");
                 });
 
             modelBuilder.Entity("KindBee.DB.DBModels.Basket", b =>
                 {
-                    b.Navigation("Positions");
+                    b.Navigation("Products");
                 });
 
             modelBuilder.Entity("KindBee.DB.DBModels.Customer", b =>
@@ -231,14 +230,11 @@ namespace KindBee.Migrations
                     b.Navigation("Orders");
                 });
 
-            modelBuilder.Entity("KindBee.DB.DBModels.Order", b =>
-                {
-                    b.Navigation("Positions");
-                });
-
             modelBuilder.Entity("KindBee.DB.DBModels.Product", b =>
                 {
                     b.Navigation("Baskets");
+
+                    b.Navigation("Orders");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,4 +1,5 @@
-﻿using KindBee.DB.DAL;
+﻿using KindBee.DB;
+using KindBee.DB.DAL;
 using KindBee.DB.DBModels;
 using KindBee.DB.Interfaces;
 using KindBee.Models;
@@ -24,10 +25,10 @@ namespace KindBee.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        public ProductController(KindBeeDB, ILogger<ProductController> logger)
+        public ProductController(KindBeeDBContext kindBeeDBContext , ILogger<ProductController> logger)
         {
             _logger = logger;
-            dal = dal;
+            dal =  new ProductDAL(kindBeeDBContext);
         }
 
         [HttpGet(Name = "GetAllItems")]
