@@ -4,6 +4,7 @@ using KindBee.DB;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace KindBee.Migrations
 {
     [DbContext(typeof(KindBeeDBContext))]
-    partial class KindBeeDBContextModelSnapshot : ModelSnapshot
+    [Migration("20230205153616_m26")]
+    partial class m26
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -30,13 +33,7 @@ namespace KindBee.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CustomerId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("CustomerId")
-                        .IsUnique();
 
                     b.ToTable("Baskets");
                 });
@@ -48,6 +45,9 @@ namespace KindBee.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("BasketId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("DateOfBirth")
                         .HasColumnType("datetime2");
@@ -83,6 +83,9 @@ namespace KindBee.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("BasketId")
+                        .IsUnique();
 
                     b.ToTable("Customers");
                 });
@@ -169,15 +172,15 @@ namespace KindBee.Migrations
                     b.ToTable("Products");
                 });
 
-            modelBuilder.Entity("KindBee.DB.DBModels.Basket", b =>
+            modelBuilder.Entity("KindBee.DB.DBModels.Customer", b =>
                 {
-                    b.HasOne("KindBee.DB.DBModels.Customer", "Customer")
-                        .WithOne("Basket")
-                        .HasForeignKey("KindBee.DB.DBModels.Basket", "CustomerId")
+                    b.HasOne("KindBee.DB.DBModels.Basket", "Basket")
+                        .WithOne("Customer")
+                        .HasForeignKey("KindBee.DB.DBModels.Customer", "BasketId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Customer");
+                    b.Navigation("Basket");
                 });
 
             modelBuilder.Entity("KindBee.DB.DBModels.Order", b =>
@@ -204,7 +207,7 @@ namespace KindBee.Migrations
                         .HasForeignKey("OrderId");
 
                     b.HasOne("KindBee.DB.DBModels.Product", "Product")
-                        .WithMany("Positions")
+                        .WithMany("Baskets")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -218,14 +221,14 @@ namespace KindBee.Migrations
 
             modelBuilder.Entity("KindBee.DB.DBModels.Basket", b =>
                 {
+                    b.Navigation("Customer")
+                        .IsRequired();
+
                     b.Navigation("Positions");
                 });
 
             modelBuilder.Entity("KindBee.DB.DBModels.Customer", b =>
                 {
-                    b.Navigation("Basket")
-                        .IsRequired();
-
                     b.Navigation("Orders");
                 });
 
@@ -236,7 +239,7 @@ namespace KindBee.Migrations
 
             modelBuilder.Entity("KindBee.DB.DBModels.Product", b =>
                 {
-                    b.Navigation("Positions");
+                    b.Navigation("Baskets");
                 });
 #pragma warning restore 612, 618
         }

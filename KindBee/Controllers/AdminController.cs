@@ -25,7 +25,7 @@ namespace KindBee.Controllers
             productDAL = new ProductDAL(kindBeeDBContext);
         }
         //защитить
-        public IActionResult Index()
+        public IActionResult Init()
         {
             return View(productDAL.Get());
         }

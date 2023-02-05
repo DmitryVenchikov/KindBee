@@ -13,8 +13,12 @@
         public string Role { get; set; } = "customer";
         public string? Mail { get; set; }
         public string? PhoneNumber { get; set; }
-        //public int BasketId { get; set; }
-        public Basket? Basket { get; set;}
-        public virtual ICollection<Order>? Orders { get; set; }
+        public virtual Basket Basket { get; set;}
+        public virtual ICollection<Order> Orders { get; set; }
+        public Customer()
+        {
+            Orders = new List<Order>();
+            Basket = new Basket();
+        }
     }
 }

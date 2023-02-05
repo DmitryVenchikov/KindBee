@@ -3,7 +3,9 @@ using KindBee.DB.DAL;
 using KindBee.DB.DBModels;
 using KindBee.DB.Interfaces;
 using KindBee.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Data;
 using System.Diagnostics;
 
 namespace KindBee.Controllers
@@ -16,6 +18,7 @@ namespace KindBee.Controllers
         IDataAccess<Customer> customerDAL;
         IDataAccess<Position> positionDAL;
         IDataAccess<Product> productDAL;
+        KindBeeDBContext context;
         public BasketController(KindBeeDBContext kindBeeDBContext, ILogger<BasketController> logger)
         {
             _logger = logger;
@@ -23,18 +26,20 @@ namespace KindBee.Controllers
             customerDAL = new CustomerDAL(kindBeeDBContext);
             positionDAL = new PositionDAL(kindBeeDBContext);
             productDAL = new ProductDAL(kindBeeDBContext);
+            context = kindBeeDBContext;
         }
-        public IActionResult Index()
+
+        [Authorize(Roles = "customer")]
+        [HttpGet(Name = "Init")]
+        public IActionResult Init()
         {
             int id;
-
             if (int.TryParse(HttpContext.User.Claims.ToList().First().Value, out id))
             {
                 var customer = customerDAL.Get(id);
                 if (customer != null) //если такой клиент существует
                 {
-                    var model = customer.Basket;
-                    return View(model);
+                    return View(customer.Basket);
                 }
                 return RedirectToAction("Error", "Home");
             }
@@ -58,14 +63,12 @@ namespace KindBee.Controllers
                 var customer = customerDAL.Get(id);
                 if (customer != null) //если такой клиент существует
                 {
-                    if (customer.Basket.Positions!=null)
-                    {
                         foreach (var t in customer.Basket.Positions)
                         {
                             customer.Basket.Positions.Remove(t);
                         }
-                    }
-                    return View(customer.Basket);
+                        context.SaveChanges();
+                    return RedirectToAction("Init", "Basket", customer.Basket);
                 }
                 return RedirectToAction("Error", "Home");
             }
@@ -122,16 +125,22 @@ namespace KindBee.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(int Id)
+        public IActionResult Delete(int productId)
         {
-            var deletedBasket = basketDAL.Delete(Id);
+            int id;
 
-            if (deletedBasket == null)
+            if (int.TryParse(HttpContext.User.Claims.ToList().First().Value, out id))
             {
-                return BadRequest();
+                var customer = customerDAL.Get(id);
+                if (customer != null) //если такой клиент существует
+                {
+                    var position = customer.Basket.Positions.Where(t => t.Product.Id == productId).First();
+                    customer.Basket.Positions.Remove(position);
+                    return RedirectToAction("Index", "Home");
+                }
+                return RedirectToAction("Error", "Home");
             }
-
-            return new ObjectResult(deletedBasket);
+            return RedirectToAction("Error", "Home");
         }
     }
 }

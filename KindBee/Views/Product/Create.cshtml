@@ -1,0 +1,47 @@
+﻿@model KindBee.DB.DBModels.Product;
+@{
+    ViewData["Title"] = "Добавление продукта";
+}
+<head>
+    <link rel="stylesheet" href="~/css/Login.css" />
+</head>
+<div class="login-box">
+  <form asp-action="Create" asp-controller="Product"  asp-anti-forgery="true">
+        <div class="validation" asp-validation-summary="ModelOnly"> </div>
+     
+    <div class="user-box">
+      <input type="text" asp-for="Name" placeholder="Наименование" />
+            <label><span asp-validation-for="Name" /></label>
+    </div>
+      
+    <div class="user-box">
+       <input type="text" asp-for="Description" placeholder="Описание продукта" />
+            <label><span asp-validation-for="Description" /></label>
+    </div>
+    <div class="user-box">
+            <input type="number" asp-for="Quantity" placeholder="Количество, имеющееся на складе" />
+            <label><span asp-validation-for="Quantity" /></label>
+    </div>
+        <label>Дата производства</label>
+        <div class="user-box">
+            <input type="datetime-local" asp-for="DateOfManufacture" placeholder="Дата производства" />
+            <label><span asp-validation-for="DateOfManufacture" /></label>
+        </div>
+         <div class="user-box">
+            <input type="number" asp-for="Price" placeholder="Стоимость товара" />
+            <label><span asp-validation-for="Price" /></label>
+    </div>
+        <button type="submit" class="registerbtn">Добавить продукт</button>
+  </form>
+</div>
+
+@section scripts{
+
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+}
+
+
+
+
+

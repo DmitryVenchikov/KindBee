@@ -18,6 +18,7 @@ namespace KindBee.Controllers
         private readonly ILogger<CustomerController> _logger;
 
         IDataAccess<Customer> dal;
+        IDataAccess<Basket> basketDAL;
 
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
@@ -30,6 +31,7 @@ namespace KindBee.Controllers
         {
             _logger = logger;
             dal = new CustomerDAL(kindBeeDBContext);
+            basketDAL = new BasketDAL(kindBeeDBContext);
         }
 
         string GetHash(string input)
@@ -60,6 +62,7 @@ namespace KindBee.Controllers
                 if (user == null)
                 {
                     // добавляем пользователя в бд
+                 
                     user = new Customer()
                     {
                         Name = model.Name,
@@ -71,15 +74,11 @@ namespace KindBee.Controllers
                         DateOfRegistration = DateTime.Now,
                         Login = model.Login,
                         Password = GetHash(model.Password),
-                        Role = "customer"
+                        Role = "customer",
                     };
-                  
 
                     dal.Add(user);
-                    
-
                     user.Id = dal.Get().ToList().Last().Id;
-
                     await Authenticate(user); // аутентификация
 
                     return RedirectToAction("Index", "Home");

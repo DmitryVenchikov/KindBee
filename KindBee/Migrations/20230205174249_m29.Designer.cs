@@ -4,6 +4,7 @@ using KindBee.DB;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace KindBee.Migrations
 {
     [DbContext(typeof(KindBeeDBContext))]
-    partial class KindBeeDBContextModelSnapshot : ModelSnapshot
+    [Migration("20230205174249_m29")]
+    partial class m29
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -223,8 +226,7 @@ namespace KindBee.Migrations
 
             modelBuilder.Entity("KindBee.DB.DBModels.Customer", b =>
                 {
-                    b.Navigation("Basket")
-                        .IsRequired();
+                    b.Navigation("Basket");
 
                     b.Navigation("Orders");
                 });

@@ -13,6 +13,9 @@ namespace KindBee.DB.DBModels
         [Precision(18, 2)]
         public decimal? Price { get; set; }
         public int Quantity { get; set; } = 0;
-        public virtual ICollection<Position>? Baskets { get; set; }
+        public virtual ICollection<Position>? Positions { get; set; }
+        public Product() {
+            Positions = new List<Position>();   
+        }
     }
 }

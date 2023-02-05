@@ -49,16 +49,27 @@ namespace KindBee.Controllers
 
             return new ObjectResult(Product);
         }
+        [HttpGet]
+        public IActionResult Create()
+        {
+            return View();
+        }
 
         [HttpPost]
-        public IActionResult Create([FromBody] Product Product)
+        public IActionResult Create(Product Product)
         {
             if (Product == null)
             {
                 return BadRequest();
             }
             dal.Add(Product);
-            return CreatedAtRoute("GetProduct", new { id = Product.Id }, Product);
+            return RedirectToAction("Init","Admin");
+        }
+        [HttpGet]
+        public IActionResult Update(int id)
+        {
+            Product Product = dal.Get(id);
+            return View(Product);
         }
 
         [HttpPut("{id}")]
@@ -89,7 +100,7 @@ namespace KindBee.Controllers
                 return BadRequest();
             }
 
-            return new ObjectResult(deletedProduct);
+            return RedirectToAction("Init", "Admin");
         }
     }
 }

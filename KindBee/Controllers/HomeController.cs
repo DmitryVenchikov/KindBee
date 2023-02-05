@@ -16,7 +16,7 @@ namespace KindBee.Controllers
         IDataAccess<Position> positionDAL;
         IDataAccess<Basket> basketDAL;
         IDataAccess<Product> productDAL;
-
+        KindBeeDBContext _kindBeeDBContext;
         public HomeController(KindBeeDBContext kindBeeDBContext, ILogger<HomeController> logger)
         {
             _logger = logger;
@@ -24,48 +24,119 @@ namespace KindBee.Controllers
             positionDAL = new PositionDAL(kindBeeDBContext);
             basketDAL = new BasketDAL(kindBeeDBContext);
             productDAL = new ProductDAL(kindBeeDBContext);
+            _kindBeeDBContext=kindBeeDBContext;
         }
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = "customer")]
         public IActionResult Index()
         {
+
+            var productsOnMain = new ProductsOnMain { };
             return View(productDAL.Get());
         }
+        //проверить на коллизии запросов к базе
         [HttpPost]
+        [Authorize(Roles ="customer")]
         public IActionResult AddProductInBasket(PurchasedProductVM purchasedProductVM)
         {
             int id;
-            var position = new Position { Product = productDAL.Get(purchasedProductVM.Id), Quantity = purchasedProductVM.Quantity };
+           
             if(int.TryParse(HttpContext.User.Claims.ToList().First().Value,out id))
             {
                 var customer = customerDAL.Get(id);
                 if (customer != null) //если такой клиент существует
                 {
-                    customer.Basket.Positions.Add(position);
+                    var product = productDAL.Get(id);
+                    if (customer.Basket.Positions.Where(t=>t.Product.Id == purchasedProductVM.Id).Count()==0)//если такой продукт существует в корзине клиента
+                    {
+                        var position = new Position { Product = product, Quantity = purchasedProductVM.Quantity };
+                        customer.Basket.Positions.Add(position);
+                    }
+                    else
+                    {
+                        customer.Basket.Positions.Where(t => t.Product.Id == purchasedProductVM.Id).
+                            First().Quantity += purchasedProductVM.Quantity;
+                    }
+                    //вычитаем из остатка склада
+                    product.Quantity -= purchasedProductVM.Quantity;
+
+                    _kindBeeDBContext.SaveChanges();
+
                     return RedirectToAction("Index","Home");
                 }
                 return RedirectToAction("Error", "Home");
             }
             return RedirectToAction("Error", "Home");
-
         }
+
         [HttpPost]
-        public IActionResult DeleteProductFromBasket(int productId)
+        [Authorize(Roles = "customer")]
+        public IActionResult DeleteOneProductFromBasket(int id)
         {
-            int id;
-            
-            if (int.TryParse(HttpContext.User.Claims.ToList().First().Value, out id))
+            int userId;
+
+            if (int.TryParse(HttpContext.User.Claims.ToList().First().Value, out userId))
             {
-                var customer = customerDAL.Get(id);
+                var customer = customerDAL.Get(userId);
                 if (customer != null) //если такой клиент существует
                 {
-                    var position = customer.Basket.Positions.Where(t => t.Product.Id == productId).First();
-                    customer.Basket.Positions.Remove(position);
+                    var product = productDAL.Get(id);
+                    if (customer.Basket.Positions.Where(t => t.Product.Id == id).Count() == 0)//если такой продукт существует в корзине клиента
+                    {
+                        //по идее невозможный случай
+                        return RedirectToAction("Index", "Home");
+                    }
+                    else
+                    {
+                        customer.Basket.Positions.Where(t => t.Product.Id == id).
+                            First().Quantity--;
+                    }
+                    //вычитаем из остатка склада
+                    product.Quantity++;
+
+                    _kindBeeDBContext.SaveChanges();
+
                     return RedirectToAction("Index", "Home");
                 }
                 return RedirectToAction("Error", "Home");
             }
             return RedirectToAction("Error", "Home");
         }
+
+
+        [HttpPost]
+        [Authorize(Roles = "customer")]
+        public IActionResult AddOneProductInBasket(int id)
+        {
+            int userId;
+
+            if (int.TryParse(HttpContext.User.Claims.ToList().First().Value, out userId))
+            {
+                var customer = customerDAL.Get(userId);
+                if (customer != null) //если такой клиент существует
+                {
+                    var product = productDAL.Get(id);
+                    if (customer.Basket.Positions.Where(t => t.Product.Id == id).Count() == 0)//если такой продукт существует в корзине клиента
+                    {
+                        var position = new Position { Product = product, Quantity = 1 };
+                        customer.Basket.Positions.Add(position);
+                    }
+                    else
+                    {
+                        customer.Basket.Positions.Where(t => t.Product.Id == id).
+                            First().Quantity ++;
+                    }
+                    //вычитаем из остатка склада
+                    product.Quantity --;
+
+                    _kindBeeDBContext.SaveChanges();
+
+                    return RedirectToAction("Index", "Home");
+                }
+                return RedirectToAction("Error", "Home");
+            }
+            return RedirectToAction("Error", "Home");
+        }
+
 
         public IActionResult Privacy()
         {
