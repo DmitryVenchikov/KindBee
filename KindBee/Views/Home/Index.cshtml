@@ -1,7 +1,7 @@
 ﻿@{
     ViewData["Title"] = "Наши продукты";
 }
-@model IEnumerable<KindBee.DB.DBModels.Product>
+@model IEnumerable<KindBee.Models.ProductOnMain>
 
 <head>
     <link rel="stylesheet" href="~/css/groceryShowcase.css" asp-append-version="true" />
@@ -30,40 +30,36 @@
                 <div class="product-image">
                     <img src="product-image.jpg" alt="Product Image">
                 </div>
-                    <div class="product-name">@item.Name</div>
-                    <div class="product-price">@item.Price</div>
+                    <div class="product-name">@item.Product.Name</div>
+                    @if (@item.Product.Price==null)
+                    {
+                        <div class="product-price">цена пока неизвестна</div>
+                    }
+                    else
+                    {
+                        <div class="product-price">@item.Product.Price</div>
+                    }
+                    <label>остаток</label>
+                    <div class="product-name">@item.Product.Quantity</div>
+                    @if (@item.QuantityInBasket != 0)
+                    {
+                        <label>добавлено в корзину</label>
+                        <div class="product-name">@item.QuantityInBasket</div>
+                    }
                 <div class="product-quantity">
-                        <button href="@Url.Action("AddOneProductInBasket", "Home", item.Id)" class="plus-btn">+</button>
-                        <button href="@Url.Action("DeleteOneProductFromBasket", "Home", item.Id)" class="minus-btn">-</button>
+                        <form asp-action="AddOneProductInBasket" asp-controller="Home">
+                            <input name="Id" type="hidden" value=@item.Product.Id />
+                        <button type="submit" class="plus-btn">+</button>
+                       </form>
+                        <form asp-action="DeleteOneProductFromBasket" asp-controller="Home">
+                            <input name="Id" type="hidden" value=@item.Product.Id />
+                            <button type="submit" class="minus-btn">-</button>
+                        </form>
                 </div>
             </div>
             }
         </div>
     </div>
-    <!--   <div class="container">
-        <h1>Products</h1>
-        <div class="row">
-    @foreach (var item in Model)
-    {
-                    <div class="col-md-4">
-                        <div class="card">
-                            <div class="card-body">
-                                <h5 class="card-title">@item.Name</h5>
-                                <p class="card-text">@item.Description</p>
-                                <form asp-action="AddProductInBasket" asp-controller="Home" name="f1">
-                                    <input name="Id" type="hidden" value=@item.Id />
-                                    <input name="Quantity" type="number" value="0" min="1" max="@item.Quantity" />
-                                    <button type="submit" class="btn btn-primary">Добавить в корзину</button>
-                                </form>
-                                <h4><a href="@Url.Action("AddOne", "Home", item.Id)">+</a></h4>
-                                <h4><a href="@Url.Action("DeleteOne", "Home", item.Id)">-</a></h4>
-                                <h6><a href="@Url.Action("Delete", "Basket", item.Id)">Удалить из корзины</a></h6>
-                            </div>
-                        </div>
-                    </div>
-    }
-        </div>
-    </div>-->
  
     <a href="@Url.Action("Init", "Basket")">Перейти в корзину</a>
 </div>

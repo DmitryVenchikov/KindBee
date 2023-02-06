@@ -2,9 +2,9 @@
 
 namespace KindBee.Models
 {
-    public class ProductsOnMain
+    public class ProductOnMain
     {
-        public List<Product> Products { get; set; }
-        public Basket Basket { get; set; }
+        public Product Product { get; set; }
+        public int QuantityInBasket { get; set; } = 0;
     }
 }

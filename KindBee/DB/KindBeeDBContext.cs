@@ -24,7 +24,7 @@ namespace KindBee.DB
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseLazyLoadingProxies().UseSqlServer("Data Source=DESKTOP-VHEI76T;Initial Catalog=KindBee;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
+            optionsBuilder.UseLazyLoadingProxies().UseSqlServer("Data Source=DESKTOP-VHEI76T;MultipleActiveResultSets=true;Initial Catalog=KindBee;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
         }
     }
 }

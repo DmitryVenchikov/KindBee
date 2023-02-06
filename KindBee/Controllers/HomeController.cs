@@ -24,29 +24,46 @@ namespace KindBee.Controllers
             positionDAL = new PositionDAL(kindBeeDBContext);
             basketDAL = new BasketDAL(kindBeeDBContext);
             productDAL = new ProductDAL(kindBeeDBContext);
-            _kindBeeDBContext=kindBeeDBContext;
+            _kindBeeDBContext = kindBeeDBContext;
         }
         [Authorize(Roles = "customer")]
         public IActionResult Index()
         {
+            int userId;
+            if (int.TryParse(HttpContext.User.Claims.ToList().First().Value, out userId))
+            {
+                var customer = customerDAL.Get(userId);
+                if (customer != null) //если такой клиент существует
+                {
+                    var productsOnMain = new List<ProductOnMain>();
 
-            var productsOnMain = new ProductsOnMain { };
-            return View(productDAL.Get());
+                    foreach (var product in productDAL.Get())
+                    {
+                        var pos = customer.Basket.Positions.Where(t => t.Product.Id == product.Id).FirstOrDefault();
+                        int? quantityInBasket = pos==null?0:pos.Quantity;
+
+                        productsOnMain.Add(new ProductOnMain { QuantityInBasket = (int)quantityInBasket, Product = product });
+                    }
+                    return View(productsOnMain);
+                }
+                return RedirectToAction("Error", "Home");
+            }
+            return RedirectToAction("Error", "Home");
         }
         //проверить на коллизии запросов к базе
         [HttpPost]
-        [Authorize(Roles ="customer")]
+        [Authorize(Roles = "customer")]
         public IActionResult AddProductInBasket(PurchasedProductVM purchasedProductVM)
         {
             int id;
-           
-            if(int.TryParse(HttpContext.User.Claims.ToList().First().Value,out id))
+
+            if (int.TryParse(HttpContext.User.Claims.ToList().First().Value, out id))
             {
                 var customer = customerDAL.Get(id);
                 if (customer != null) //если такой клиент существует
                 {
                     var product = productDAL.Get(id);
-                    if (customer.Basket.Positions.Where(t=>t.Product.Id == purchasedProductVM.Id).Count()==0)//если такой продукт существует в корзине клиента
+                    if (customer.Basket.Positions.Where(t => t.Product.Id == purchasedProductVM.Id).Count() == 0)//если такой продукт существует в корзине клиента
                     {
                         var position = new Position { Product = product, Quantity = purchasedProductVM.Quantity };
                         customer.Basket.Positions.Add(position);
@@ -61,7 +78,7 @@ namespace KindBee.Controllers
 
                     _kindBeeDBContext.SaveChanges();
 
-                    return RedirectToAction("Index","Home");
+                    return RedirectToAction("Index", "Home");
                 }
                 return RedirectToAction("Error", "Home");
             }
@@ -80,7 +97,7 @@ namespace KindBee.Controllers
                 if (customer != null) //если такой клиент существует
                 {
                     var product = productDAL.Get(id);
-                    if (customer.Basket.Positions.Where(t => t.Product.Id == id).Count() == 0)//если такой продукт существует в корзине клиента
+                    if (customer.Basket.Positions.Where(t => t.Product.Id == id).Count() == 0)//если такой продукт не существует в корзине клиента
                     {
                         //по идее невозможный случай
                         return RedirectToAction("Index", "Home");
@@ -115,7 +132,11 @@ namespace KindBee.Controllers
                 if (customer != null) //если такой клиент существует
                 {
                     var product = productDAL.Get(id);
-                    if (customer.Basket.Positions.Where(t => t.Product.Id == id).Count() == 0)//если такой продукт существует в корзине клиента
+                    if (product.Quantity == 0)
+                    {
+                        return RedirectToAction("Index", "Home");
+                    }
+                    if (customer.Basket.Positions.Where(t => t.Product.Id == id).Count() == 0)//если такой продукт не существует в корзине клиента
                     {
                         var position = new Position { Product = product, Quantity = 1 };
                         customer.Basket.Positions.Add(position);
@@ -123,10 +144,10 @@ namespace KindBee.Controllers
                     else
                     {
                         customer.Basket.Positions.Where(t => t.Product.Id == id).
-                            First().Quantity ++;
+                            First().Quantity++;
                     }
                     //вычитаем из остатка склада
-                    product.Quantity --;
+                    product.Quantity--;
 
                     _kindBeeDBContext.SaveChanges();
 
