@@ -4,9 +4,11 @@
 @model IEnumerable<KindBee.Models.ProductOnMain>
 
 <head>
-    <link rel="stylesheet" href="~/css/groceryShowcase.css" asp-append-version="true" />
+    <link type="text/css" rel="stylesheet" href="~/css/groceryShowcase.css" asp-append-version="true" />
+    <script src="/js/carusel.js"></script>
+    <link type="text/css" href="~/css/carusel.css" rel="stylesheet" type="text/css"  runat="server" asp-append-version="true" />
 </head>
-<div class="slider">
+<!--<div class="slider">
     <div class="slide">
         <img src="~/photo/2.jpg" />
     </div>
@@ -16,8 +18,22 @@
     <div class="slide">
         <img src="~/photo/3.jpg" />
     </div>
-</div>
+</div>--> 
+<div id="carousel">
+    <figure id="spinner">
+        <div class="imgFrame"><img src="~/photo/1.jpg" alt></div>
+        <div class="imgFrame"><img src="~/photo/2.jpg" alt></div>
+        <div class="imgFrame"><img src="~/photo/3.jpg" alt></div>
+        <div class="imgFrame"><img src="~/photo/4.jpg" alt></div>
+        <div class="imgFrame"><img src="~/photo/9.jpg" alt></div>
+        <div class="imgFrame"><img src="~/photo/6.jpg" alt></div>
+        <div class="imgFrame"><img src="~/photo/7.jpg" alt></div>
+        <div class="imgFrame"><img src="~/photo/8.jpg" alt></div>
+    </figure>
+  </div>
+
 <div class="text-center">
+    <div id='myPage'></div>
     <h2>Наши продукты</h2>
 
   
