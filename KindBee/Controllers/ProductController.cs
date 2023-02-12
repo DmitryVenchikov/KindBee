@@ -1,10 +1,12 @@
-﻿using KindBee.DB;
+﻿using Azure.Core;
+using KindBee.DB;
 using KindBee.DB.DAL;
 using KindBee.DB.DBModels;
 using KindBee.DB.Interfaces;
 using KindBee.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using System.IO;
 
 namespace KindBee.Controllers
 {
@@ -56,13 +58,22 @@ namespace KindBee.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(Product Product)
+        public IActionResult Create(ProductVM Product)
         {
+            var p = new Product() { Name = Product.Name, DateOfManufacture = Product.DateOfManufacture, Description = Product.Description, Price = Product.Price, Quantity = Product.Quantity };
+
+            using (var stream = Product.Image.OpenReadStream())
+            {
+                byte[] buffer = new byte[stream.Length];
+                // считываем данные
+                stream.ReadAsync(buffer, 0, buffer.Length);
+                p.Image = buffer;
+            }
             if (Product == null)
             {
                 return BadRequest();
             }
-            dal.Add(Product);
+            dal.Add(p);
             return RedirectToAction("Init","Admin");
         }
         [HttpGet]
@@ -90,7 +101,7 @@ namespace KindBee.Controllers
             return RedirectToRoute("GetAllItems");
         }
 
-        [HttpDelete("{id}")]
+        [HttpPost]
         public IActionResult Delete(int Id)
         {
             var deletedProduct = dal.Delete(Id);
@@ -101,6 +112,12 @@ namespace KindBee.Controllers
             }
 
             return RedirectToAction("Init", "Admin");
+        }
+        [HttpPost]
+        public void Test()
+        {
+
+            
         }
     }
 }

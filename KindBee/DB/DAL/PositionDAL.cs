@@ -18,7 +18,11 @@ namespace KindBee.DB.DAL
         public Position Delete(int id)
         {
             var t = Get(id);
-            context.Positions.Remove(t);
+            if (t != null)
+            {
+                context.Positions.Remove(t);
+                context.SaveChanges();
+            }
             return t;
         }
 

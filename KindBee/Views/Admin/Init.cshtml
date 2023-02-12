@@ -1,10 +1,20 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Администрирование сайта";
 }
 @model IEnumerable<KindBee.DB.DBModels.Product>
 
 <head>
     <link rel="stylesheet" href="~/css/groceryShowcase.css" />
+    <script type="text/jscript" src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
+    <script type="text/jscript">
+        function Delete(Id) {
+            $.post("/Product/Delete", { id: Id })
+                .done(function (data) {
+                    location.reload();
+                });
+        };
+    </script>
+
 </head>
 <div class="text-center">
     <h2>Режим администратора</h2>
@@ -18,9 +28,9 @@
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title">@item.Name</h5>
-                            <p class="card-text">@item.Description</p>   
-                            <h6><a href="@Url.Action("Delete", "Product", item.Id)">Удалить из набора продуктов</a></h6>
-                            <h6><a href="@Url.Action("Update", "Product", item.Id)">Редактировать</a></h6>
+                            <p class="card-text">@item.Description</p>
+                            <h6><a href="#" onclick="Delete(@item.Id)">Удалить из набора продуктов</a></h6>
+                            <h6><a href="@Url.Action("Update", "Product", @item.Id)">Редактировать</a></h6>
                         </div>
                     </div>
                 </div>

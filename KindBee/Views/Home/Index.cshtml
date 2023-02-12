@@ -6,7 +6,7 @@
 <head>
     <link type="text/css" rel="stylesheet" href="~/css/groceryShowcase.css" asp-append-version="true" />
     <script src="/js/carusel.js"></script>
-    <link type="text/css" href="~/css/carusel.css" rel="stylesheet" type="text/css"  runat="server" asp-append-version="true" />
+    <link type="text/css" href="~/css/carusel.css" rel="stylesheet" type="text/css" runat="server" asp-append-version="true" />
 </head>
 <!--<div class="slider">
     <div class="slide">
@@ -18,36 +18,49 @@
     <div class="slide">
         <img src="~/photo/3.jpg" />
     </div>
-</div>--> 
-<div id="carousel">
-    <figure id="spinner">
-        <div class="imgFrame"><img src="~/photo/1.jpg" alt></div>
-        <div class="imgFrame"><img src="~/photo/2.jpg" alt></div>
-        <div class="imgFrame"><img src="~/photo/3.jpg" alt></div>
-        <div class="imgFrame"><img src="~/photo/4.jpg" alt></div>
-        <div class="imgFrame"><img src="~/photo/9.jpg" alt></div>
-        <div class="imgFrame"><img src="~/photo/6.jpg" alt></div>
-        <div class="imgFrame"><img src="~/photo/7.jpg" alt></div>
-        <div class="imgFrame"><img src="~/photo/8.jpg" alt></div>
-    </figure>
-  </div>
+</div>-->
+
 
 <div class="text-center">
-    <div id='myPage'></div>
-    <h2>Наши продукты</h2>
+    <h3>
+        <p align="left">
+            Приглашаем вас в наш магазин пасеки!
+            У нас вы найдете вкуснейшие продукты, приготовленные из натуральных ингредиентов. На протяжении многих лет наша семья занималась пчеловодством, и для нас как не для кого другого важно, чтобы качество нашего продукта находилось на самом высоком уровне.
+            Наши продукты пасеки производятся вручную и проходят строгий контроль качества. Мы предлагаем большой выбор продуктов пасеки, включая пергу, разные виды меда, включая мед в сотах.
+            Оцените вкус и пользу меда вместе с нами!
+        </p>
 
-  
-
+    </h3>
+    <div id="carousel">
+        <figure id="spinner">
+            <div class="imgFrame"><img src="~/photo/1.jpg" alt></div>
+            <div class="imgFrame"><img src="~/photo/2.jpg" alt></div>
+            <div class="imgFrame"><img src="~/photo/3.jpg" alt></div>
+            <div class="imgFrame"><img src="~/photo/4.jpg" alt></div>
+            <div class="imgFrame"><img src="~/photo/9.jpg" alt></div>
+            <div class="imgFrame"><img src="~/photo/6.jpg" alt></div>
+            <div class="imgFrame"><img src="~/photo/7.jpg" alt></div>
+            <div class="imgFrame"><img src="~/photo/8.jpg" alt></div>
+        </figure>
+    </div>
     <div class="product-page">
         <div class="product-list">
-                    @foreach (var item in Model)
+            @foreach (var item in Model)
             {
-            <div class="product-item">
-                <div class="product-image">
-                    <img src="product-image.jpg" alt="Product Image">
-                </div>
+                <div class="product-item">
+                    @if (item.Product.Image != null)
+                    {
+                        <div class="product-image">
+                            @Html.Raw("<img style='width:100%; height:100%;' src=\"data:image/jpeg;base64," + Convert.ToBase64String(@item.Product.Image) + "\" />")
+                        </div>
+                    }
+
                     <div class="product-name">@item.Product.Name</div>
-                    @if (@item.Product.Price==null)
+                    @if (@item.Product.Description != null)
+                    {
+                        <div class="product-description">@item.Product.Description</div>
+                    }
+                    @if (@item.Product.Price == null)
                     {
                         <div class="product-price">цена пока неизвестна</div>
                     }
@@ -62,20 +75,20 @@
                         <label>добавлено в корзину</label>
                         <div class="product-name">@item.QuantityInBasket</div>
                     }
-                <div class="product-quantity">
+                    <div class="product-quantity">
                         <form asp-action="AddOneProductInBasket" asp-controller="Home">
                             <input name="Id" type="hidden" value=@item.Product.Id />
-                        <button type="submit" class="plus-btn">+</button>
-                       </form>
+                            <button type="submit" class="plus-btn">+</button>
+                        </form>
                         <form asp-action="DeleteOneProductFromBasket" asp-controller="Home">
                             <input name="Id" type="hidden" value=@item.Product.Id />
                             <button type="submit" class="minus-btn">-</button>
                         </form>
+                    </div>
                 </div>
-            </div>
             }
         </div>
     </div>
- 
+
     <a href="@Url.Action("Init", "Basket")">Перейти в корзину</a>
 </div>

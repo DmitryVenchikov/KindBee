@@ -18,7 +18,12 @@ namespace KindBee.DB.DAL
         public Product Delete(int id)
         {
             var t = Get(id);
-            context.Products.Remove(t);
+            if(t!=null)
+            {
+                context.Products.Remove(t);
+                context.SaveChanges();
+            }
+         
             return t;
         }
 

@@ -18,7 +18,11 @@ namespace KindBee.DB.DAL
         public Order Delete(int id)
         {
             var t = Get(id);
-            context.Orders.Remove(t);
+            if (t != null)
+            {
+                context.Orders.Remove(t);
+                context.SaveChanges();
+            }
             return t;
         }
 

@@ -2,9 +2,9 @@
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace KindBee.DB.DBModels
+namespace KindBee.Models
 {
-    public class Product
+    public class ProductVM
     {
         public int Id { get; set; }
         public string Name { get; set; }
@@ -13,10 +13,6 @@ namespace KindBee.DB.DBModels
         [Precision(18, 2)]
         public decimal? Price { get; set; }
         public int Quantity { get; set; } = 0;
-        public byte[]? Image { get; set; }
-        public virtual ICollection<Position>? Positions { get; set; }
-        public Product() {
-            Positions = new List<Position>();   
-        }
+        public IFormFile Image { get; set; }
     }
 }

@@ -18,7 +18,11 @@ namespace KindBee.DB.DAL
         public Customer Delete(int id)
         {
             var t = Get(id);
-            context.Customers.Remove(t);
+            if (t != null)
+            {
+                context.Customers.Remove(t);
+                context.SaveChanges();
+            }
             return t;
         }
 

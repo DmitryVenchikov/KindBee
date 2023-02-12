@@ -18,7 +18,11 @@ namespace KindBee.DB.DAL
         public Basket Delete(int id)
         {
             var t = Get(id);
-            context.Baskets.Remove(t);
+            if (t != null)
+            {
+                context.Baskets.Remove(t);
+                context.SaveChanges();
+            }
             return t;
         }
 

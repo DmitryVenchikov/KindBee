@@ -1,4 +1,4 @@
-﻿@model KindBee.DB.DBModels.Product;
+﻿@model KindBee.Models.ProductVM;
 @{
     ViewData["Title"] = "Добавление продукта";
 }
@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="~/css/Login.css" />
 </head>
 <div class="login-box">
-  <form asp-action="Create" asp-controller="Product"  asp-anti-forgery="true">
+    <form asp-action="Create" asp-controller="Product" asp-anti-forgery="true" enctype="multipart/form-data">
         <div class="validation" asp-validation-summary="ModelOnly"> </div>
      
     <div class="user-box">
@@ -22,6 +22,12 @@
             <input type="number" asp-for="Quantity" placeholder="Количество, имеющееся на складе" />
             <label><span asp-validation-for="Quantity" /></label>
     </div>
+        <div class="user-box">
+        <p>Загрузите фото продукта</p>
+        <p>
+                <input asp-for="Image" type="file" name="Image" multiple accept="image/*,image/jpeg,image/jpg" placeholder="Фото продукта">
+        <p/>
+        </div>
         <label>Дата производства</label>
         <div class="user-box">
             <input type="datetime-local" asp-for="DateOfManufacture" placeholder="Дата производства" />

@@ -97,6 +97,11 @@
 .product-name {
     color: #000;
 }
+.product-description {
+    color: #000;
+    font-size: small;
+    width:auto
+}
 
 .product-price {
     color: #009900;
