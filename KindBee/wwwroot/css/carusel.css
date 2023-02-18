@@ -11,7 +11,7 @@ figure#spinner {
     transform-style: preserve-3d;
     height: 300px;
     transform-origin: 50% 50% -500px;
-    transition: 1s;
+    transition: 2s;
 }
 
 .imgFrame {

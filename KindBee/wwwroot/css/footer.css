@@ -1,0 +1,8 @@
+.myFooter
+{
+    position: relative
+}
+.footerColumn{
+    display: inline-block;
+    width:20%;
+}

@@ -22,7 +22,7 @@ function sleep(time) {
 }
 async function fun1() {
     while (true) {
-        await sleep(2000);
+        await sleep(6000);
         angle = angle + 45;
         spinner = document.querySelector("#spinner");
         spinner.setAttribute("style", "-webkit-transform: rotateY(" + angle + "deg); -moz-transform: rotateY(" + angle + "deg); transform: rotateY(" + angle + "deg);");
