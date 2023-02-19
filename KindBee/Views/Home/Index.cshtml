@@ -11,37 +11,37 @@
     <script type="text/jscript" src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
     <script type="text/jscript">
         function AddOneProductInBasket(Id, el) {
+
+            var product = el.parentNode;
+            var count = product.children[0].value;
+            count++;
+            if (product.children[0].max < count) {
+                return;
+            }
             $.post("/Home/AddOneProductInBasket", { id: Id })
                 .done(function (data) {
                     //анализируем ответ от сервера. Если больше продуктов не осталось, то деактивируем кнопку добавления и выводим сообщение
+                    //если что то не так - выводим сообщение об ошибке
 
-                    var product = el.parentNode;
-                    var count = product.children[0].value;
-                    
-
-                    count++;
+                  
                     product.children[0].value = count;
                 });
         };
 
         function DeleteOneProductFromBasket(Id, el) {
+             var product = el.parentNode;
+                    var count = product.children[0].value;
+                    if (product.children[0].value==0)
+                    {
+                        return;
+                    }
             $.post("/Home/DeleteOneProductFromBasket", { id: Id })
                 .done(function (data) {
                     /*location.reload();*/
-                    var product = el.parentNode;
-                    var count = product.children[0].value;
                     count--;
                     product.children[0].value = count;
                 });
         };
-
-
-        //$('plus-btn').click(function (i) {
-        //    var product = $(this).parent('product-quantity');
-        //    var count = $(product).children('QuantityInBasket').value;
-        //    count++;
-        //    $(product).children('QuantityInBasket').val(count);
-        //});
     </script>
 </head>
 
@@ -105,18 +105,15 @@
                     {
                         <div class="product-price">@item.Product.Price</div>
                     }
-                    <label>остаток</label>
-                    <div class="product-name">@item.Product.Quantity</div>
-                    @if (@item.QuantityInBasket != 0)
+                    @if (@item.Product.Quantity < 5)
                     {
-                        <label>добавлено в корзину</label>
-                        <div class="product-name">@item.QuantityInBasket</div>
+                        <label>Осталось немного</label>
                     }
                   
                     <div class="product-quantity">
-                        <input type="number" class="QuantityInBasket"  value=@item.QuantityInBasket>
+                        <input type="number" class="QuantityInBasket" value=@item.QuantityInBasket min="0" max=@item.Product.Quantity>
                         <button onclick="AddOneProductInBasket(@item.Product.Id, this)" type="submit" class="plus-btn">+</button>
-                        <button onclick="DeleteOneProductFromBasket(@item.Product.Id, this)" type="submit" class="minus-btn">+</button>
+                        <button onclick="DeleteOneProductFromBasket(@item.Product.Id, this)" type="submit" class="minus-btn">-</button>
                     </div>
                 </div>
             }

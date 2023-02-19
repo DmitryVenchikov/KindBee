@@ -5,20 +5,66 @@
 
 <head>
     <link rel="stylesheet" href="~/css/groceryShowcase.css" />
+
+    <script type="text/jscript" src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
+    <script type="text/jscript">
+        function AddOneProductInBasket(Id, el) {
+
+            var product = el.parentNode;
+            var count = product.children[0].value;
+
+            if (product.children[0].max < count) {
+                return;
+            }
+            $.post("/Home/AddOneProductInBasket", { id: Id })
+                .done(function (data) {
+                    count++;
+                    //анализируем ответ от сервера. Если больше продуктов не осталось, то деактивируем кнопку добавления и выводим сообщение
+                    //если что то не так - выводим сообщение об ошибке
+
+
+                    product.children[0].value = count;
+                });
+        };
+
+        function DeleteOneProductFromBasket(Id, el) {
+            $.post("/Home/DeleteOneProductFromBasket", { id: Id })
+                .done(function (data) {
+                    var product = el.parentNode;
+                    var count = product.children[0].value;
+                    
+                    if (data == 204) {
+                        var row = el.parentNode.parentNode.parentNode;
+                        row.remove();
+                        return;
+                    }
+                    else if (data == 200)
+                    {
+                        count--;
+                        product.children[0].value = count;
+                    }
+                    else
+                    {
+                        alert("Не удалось удалить из-за проблемы на сервере. Повторите операцию позже");
+                    }
+                });
+        };
+    </script>
 </head>
 <div class="text-center">
-    @if(Model.Positions==null)
+    @if (Model.Positions == null)
     {
         <h2>Ваша корзина пуста</h2>
-    }else
+    }
+    else
     {
-        
+
         <table class="table">
             <thead>
                 <tr>
                     <th>Наименование продукта</th>
                     <th>Цена за 1 шт.</th>
-                    <th>Остаток</th>
+                    <th>Количество</th>
                     <th></th>
                     <th></th>
                 </tr>
@@ -32,21 +78,22 @@
                         <td>@item.Quantity</td>
                         <td><a href="@Url.Action("Delete", "Basket", item.Id)">Удалить</a></td>
                         <td>
-                            <form asp-action="AddProductInBasket" asp-controller="Home">
-                                <input type="hidden" asp-for="@item.Id" />
-                                <input type="number" asp-for="@item.Quantity" min="1" max="@item.Quantity" />
-                                <button type="submit" class="btn btn-primary">Добавить в корзину</button>
-                            </form>
+                            <div class="product-quantity">
+                                <input type="number" class="QuantityInBasket" value=@item.Quantity min="0" max=@item.Product.Quantity>
+                                <button onclick="AddOneProductInBasket(@item.Product.Id, this)" type="submit" class="plus-btn">+</button>
+                                <button onclick="DeleteOneProductFromBasket(@item.Product.Id, this)" type="submit" class="minus-btn">-</button>
+                            </div>
                         </td>
                     </tr>
-                    <tr><td>Итого</td><td>@Model.TotalSum</td></tr>
+
                 }
+                <tr><td>Итого - @Model.TotalSum рублей</td></tr>
             </tbody>
         </table>
         <a href="@Url.Action("DeleteAllPositions", "Basket")">Очистить корзину</a>
         <a href="@Url.Action("Init", "Order")">Оформить заказ</a>
     }
 
-   
+
     <a href="@Url.Action("Index", "Home")">Перейти на главную</a>
 </div>

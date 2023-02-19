@@ -1,10 +1,12 @@
-﻿using KindBee.DB;
+﻿using Azure;
+using KindBee.DB;
 using KindBee.DB.DAL;
 using KindBee.DB.DBModels;
 using KindBee.DB.Interfaces;
 using KindBee.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Diagnostics;
 
 namespace KindBee.Controllers
@@ -53,7 +55,7 @@ namespace KindBee.Controllers
         //проверить на коллизии запросов к базе
         [HttpPost]
         [Authorize(Roles = "customer")]
-        public IActionResult AddProductInBasket(PurchasedProductVM purchasedProductVM)
+        public int AddProductInBasket(PurchasedProductVM purchasedProductVM)
         {
             int id;
 
@@ -78,16 +80,16 @@ namespace KindBee.Controllers
 
                     _kindBeeDBContext.SaveChanges();
 
-                    return RedirectToAction("Index", "Home");
+                    return StatusCodes.Status200OK;
                 }
-                return RedirectToAction("Error", "Home");
+                return StatusCodes.Status203NonAuthoritative;
             }
-            return RedirectToAction("Error", "Home");
+            return StatusCodes.Status203NonAuthoritative;
         }
 
         [HttpPost]
         [Authorize(Roles = "customer")]
-        public IActionResult DeleteOneProductFromBasket(int id)
+        public int DeleteOneProductFromBasket(int id)
         {
             int userId;
 
@@ -100,23 +102,31 @@ namespace KindBee.Controllers
                     if (customer.Basket.Positions.Where(t => t.Product.Id == id).Count() <= 0)//если такой продукт не существует в корзине клиента
                     {
                         //по идее невозможный случай
-                        return RedirectToAction("Index", "Home");
+                        return StatusCodes.Status200OK;
                     }
                     else
                     {
-                        customer.Basket.Positions.Where(t => t.Product.Id == id).
-                            First().Quantity--;
+                        var position = customer.Basket.Positions.Where(t => t.Product.Id == id).
+                            First();
+                        position.Quantity--;
+                        if(position.Quantity==0)
+                        {
+                            positionDAL.Delete(position.Id);
+                            //добавляем на склад
+                            product.Quantity++;
+                            _kindBeeDBContext.SaveChanges();
+                            return StatusCodes.Status204NoContent;
+                        }
                     }
-                    //вычитаем из остатка склада
+                    //добавляем на склад
                     product.Quantity++;
 
                     _kindBeeDBContext.SaveChanges();
-
-                    return RedirectToAction("Index", "Home");
+                    return StatusCodes.Status200OK;
                 }
-                return RedirectToAction("Error", "Home");
+                return StatusCodes.Status203NonAuthoritative;
             }
-            return RedirectToAction("Error", "Home");
+            return StatusCodes.Status203NonAuthoritative;
         }
 
 

@@ -63,8 +63,9 @@ namespace KindBee.Controllers
                 var customer = customerDAL.Get(id);
                 if (customer != null) //если такой клиент существует
                 {
-                        foreach (var t in customer.Basket.Positions)
+                        foreach (var t in customer.Basket.Positions.ToList())
                         {
+                            t.Product.Quantity += t.Quantity;
                             customer.Basket.Positions.Remove(t);
                         }
                         context.SaveChanges();
