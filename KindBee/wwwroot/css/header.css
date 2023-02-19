@@ -1,0 +1,15 @@
+.myHeader {
+    padding:3%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+.headerColumn{
+    display: inline-block;
+    width:10%;
+}
+
+header {
+    background-color: #FFD073;
+    height: 100px;
+}
