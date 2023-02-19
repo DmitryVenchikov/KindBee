@@ -97,7 +97,7 @@ namespace KindBee.Controllers
                 if (customer != null) //если такой клиент существует
                 {
                     var product = productDAL.Get(id);
-                    if (customer.Basket.Positions.Where(t => t.Product.Id == id).Count() == 0)//если такой продукт не существует в корзине клиента
+                    if (customer.Basket.Positions.Where(t => t.Product.Id == id).Count() <= 0)//если такой продукт не существует в корзине клиента
                     {
                         //по идее невозможный случай
                         return RedirectToAction("Index", "Home");

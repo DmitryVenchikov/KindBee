@@ -7,18 +7,44 @@
     <link type="text/css" rel="stylesheet" href="~/css/groceryShowcase.css" asp-append-version="true" />
     <script src="/js/carusel.js"></script>
     <link type="text/css" href="~/css/carusel.css" rel="stylesheet" type="text/css" runat="server" asp-append-version="true" />
+
+    <script type="text/jscript" src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
+    <script type="text/jscript">
+        function AddOneProductInBasket(Id, el) {
+            $.post("/Home/AddOneProductInBasket", { id: Id })
+                .done(function (data) {
+                    //анализируем ответ от сервера. Если больше продуктов не осталось, то деактивируем кнопку добавления и выводим сообщение
+
+                    var product = el.parentNode;
+                    var count = product.children[0].value;
+                    
+
+                    count++;
+                    product.children[0].value = count;
+                });
+        };
+
+        function DeleteOneProductFromBasket(Id, el) {
+            $.post("/Home/DeleteOneProductFromBasket", { id: Id })
+                .done(function (data) {
+                    /*location.reload();*/
+                    var product = el.parentNode;
+                    var count = product.children[0].value;
+                    count--;
+                    product.children[0].value = count;
+                });
+        };
+
+
+        //$('plus-btn').click(function (i) {
+        //    var product = $(this).parent('product-quantity');
+        //    var count = $(product).children('QuantityInBasket').value;
+        //    count++;
+        //    $(product).children('QuantityInBasket').val(count);
+        //});
+    </script>
 </head>
-<!--<div class="slider">
-    <div class="slide">
-        <img src="~/photo/2.jpg" />
-    </div>
-    <div class="slide">
-        <img src="~/photo/2.jpg" />
-    </div>
-    <div class="slide">
-        <img src="~/photo/3.jpg" />
-    </div>
-</div>-->
+
 
 
 <div class="text-center">
@@ -86,15 +112,11 @@
                         <label>добавлено в корзину</label>
                         <div class="product-name">@item.QuantityInBasket</div>
                     }
+                  
                     <div class="product-quantity">
-                        <form asp-action="AddOneProductInBasket" asp-controller="Home">
-                            <input name="Id" type="hidden" value=@item.Product.Id />
-                            <button type="submit" class="plus-btn">+</button>
-                        </form>
-                        <form asp-action="DeleteOneProductFromBasket" asp-controller="Home">
-                            <input name="Id" type="hidden" value=@item.Product.Id />
-                            <button type="submit" class="minus-btn">-</button>
-                        </form>
+                        <input type="number" class="QuantityInBasket"  value=@item.QuantityInBasket>
+                        <button onclick="AddOneProductInBasket(@item.Product.Id, this)" type="submit" class="plus-btn">+</button>
+                        <button onclick="DeleteOneProductFromBasket(@item.Product.Id, this)" type="submit" class="minus-btn">+</button>
                     </div>
                 </div>
             }

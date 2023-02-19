@@ -1,5 +1,5 @@
 html {
-  font-size: 14px;
+    font-size: 14px;
 }
 
 @media (min-width: 768px) {
@@ -13,6 +13,37 @@ html {
   min-height: 100%;
 }
 
-body {
-  margin-bottom: 60px;
+.mainGreetings p{
+    text-indent:3%;
 }
+
+
+
+html, body {
+    height: 100%;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+.container {
+    flex: 1 0 auto;
+}
+
+footer {
+    flex-shrink: 0;
+}
+
+a{
+    text-decoration:none;
+    color:black;
+}
+
+    a:hover {
+        font-size: 120%;
+        transition: 0.5s;
+        text-decoration: none;
+        color: black;
+    }
