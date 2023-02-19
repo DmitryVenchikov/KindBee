@@ -27,7 +27,6 @@ async function fun1() {
         spinner = document.querySelector("#spinner");
         spinner.setAttribute("style", "-webkit-transform: rotateY(" + angle + "deg); -moz-transform: rotateY(" + angle + "deg); transform: rotateY(" + angle + "deg);");
     }
-
 }
 
 fun1();

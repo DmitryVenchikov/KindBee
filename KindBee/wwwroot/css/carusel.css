@@ -9,7 +9,7 @@
 
 figure#spinner {
     transform-style: preserve-3d;
-    height: 300px;
+    height: 250px;
     transform-origin: 50% 50% -500px;
     transition: 2s;
 }
