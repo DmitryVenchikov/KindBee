@@ -43,7 +43,6 @@ namespace KindBee.Controllers
                     {
                         var pos = customer.Basket.Positions.Where(t => t.Product.Id == product.Id).FirstOrDefault();
                         int? quantityInBasket = pos==null?0:pos.Quantity;
-
                         productsOnMain.Add(new ProductOnMain { QuantityInBasket = (int)quantityInBasket, Product = product });
                     }
                     return View(productsOnMain);
@@ -54,7 +53,7 @@ namespace KindBee.Controllers
         }
         //проверить на коллизии запросов к базе
         [HttpPost]
-        [Authorize(Roles = "customer")]
+        //[Authorize(Roles = "customer")]
         public int AddProductInBasket(PurchasedProductVM purchasedProductVM)
         {
             int id;
@@ -87,87 +86,7 @@ namespace KindBee.Controllers
             return StatusCodes.Status203NonAuthoritative;
         }
 
-        [HttpPost]
-        [Authorize(Roles = "customer")]
-        public int DeleteOneProductFromBasket(int id)
-        {
-            int userId;
-
-            if (int.TryParse(HttpContext.User.Claims.ToList().First().Value, out userId))
-            {
-                var customer = customerDAL.Get(userId);
-                if (customer != null) //если такой клиент существует
-                {
-                    var product = productDAL.Get(id);
-                    if (customer.Basket.Positions.Where(t => t.Product.Id == id).Count() <= 0)//если такой продукт не существует в корзине клиента
-                    {
-                        //по идее невозможный случай
-                        return StatusCodes.Status200OK;
-                    }
-                    else
-                    {
-                        var position = customer.Basket.Positions.Where(t => t.Product.Id == id).
-                            First();
-                        position.Quantity--;
-                        if(position.Quantity==0)
-                        {
-                            positionDAL.Delete(position.Id);
-                            //добавляем на склад
-                            product.Quantity++;
-                            _kindBeeDBContext.SaveChanges();
-                            return StatusCodes.Status204NoContent;
-                        }
-                    }
-                    //добавляем на склад
-                    product.Quantity++;
-
-                    _kindBeeDBContext.SaveChanges();
-                    return StatusCodes.Status200OK;
-                }
-                return StatusCodes.Status203NonAuthoritative;
-            }
-            return StatusCodes.Status203NonAuthoritative;
-        }
-
-
-        [HttpPost]
-        [Authorize(Roles = "customer")]
-        public IActionResult AddOneProductInBasket(int id)
-        {
-            int userId;
-
-            if (int.TryParse(HttpContext.User.Claims.ToList().First().Value, out userId))
-            {
-                var customer = customerDAL.Get(userId);
-                if (customer != null) //если такой клиент существует
-                {
-                    var product = productDAL.Get(id);
-                    if (product.Quantity == 0)
-                    {
-                        return RedirectToAction("Index", "Home");
-                    }
-                    if (customer.Basket.Positions.Where(t => t.Product.Id == id).Count() == 0)//если такой продукт не существует в корзине клиента
-                    {
-                        var position = new Position { Product = product, Quantity = 1 };
-                        customer.Basket.Positions.Add(position);
-                    }
-                    else
-                    {
-                        customer.Basket.Positions.Where(t => t.Product.Id == id).
-                            First().Quantity++;
-                    }
-                    //вычитаем из остатка склада
-                    product.Quantity--;
-
-                    _kindBeeDBContext.SaveChanges();
-
-                    return RedirectToAction("Index", "Home");
-                }
-                return RedirectToAction("Error", "Home");
-            }
-            return RedirectToAction("Error", "Home");
-        }
-
+  
 
         public IActionResult Privacy()
         {

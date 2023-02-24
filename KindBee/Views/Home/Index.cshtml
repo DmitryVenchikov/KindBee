@@ -18,7 +18,7 @@
             if (product.children[0].max < count) {
                 return;
             }
-            $.post("/Home/AddOneProductInBasket", { id: Id })
+            $.post("/Basket/AddOneProductInBasket", { id: Id })
                 .done(function (data) {
                     //анализируем ответ от сервера. Если больше продуктов не осталось, то деактивируем кнопку добавления и выводим сообщение
                     //если что то не так - выводим сообщение об ошибке
@@ -35,7 +35,7 @@
                     {
                         return;
                     }
-            $.post("/Home/DeleteOneProductFromBasket", { id: Id })
+            $.post("/Basket/DeleteOneProductFromBasket", { id: Id })
                 .done(function (data) {
                     /*location.reload();*/
                     count--;

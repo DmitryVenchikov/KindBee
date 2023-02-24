@@ -91,6 +91,18 @@ namespace KindBee.Controllers
         [HttpGet]
         public IActionResult Login()
         {
+            //var t = HttpContext.User.Claims.ToList().FirstOrDefault().Value;
+            //if (t!=null)
+            //{
+            //    if (int.TryParse(t, out int id))
+            //    {
+            //        var user = dal.Get(id);
+            //        if (user != null)
+            //        {
+            //            return RedirectToAction("Index", "Home");
+            //        }
+            //    }
+            //}
             return View();
         }
         [HttpPost]
