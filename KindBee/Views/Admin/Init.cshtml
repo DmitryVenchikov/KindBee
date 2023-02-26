@@ -13,6 +13,12 @@
                     location.reload();
                 });
         };
+        function Update(Id) {
+        $.get("/Product/Update", { id: Id })
+            .done(function (data) {
+                location.reload();
+            });
+                };
     </script>
 
 </head>
@@ -30,7 +36,8 @@
                             <h5 class="card-title">@item.Name</h5>
                             <p class="card-text">@item.Description</p>
                             <h6><a href="#" onclick="Delete(@item.Id)">Удалить из набора продуктов</a></h6>
-                            <h6><a href="@Url.Action("Update", "Product", @item.Id)">Редактировать</a></h6>
+                            <h6><a href="#" onclick="Update(@item.Id)">Редактировать</a></h6>
+                            <h6><a asp-action="Update" asp-controller="Product" asp-route-id="@item.Id">Редактировать2</a></h6>
                         </div>
                     </div>
                 </div>

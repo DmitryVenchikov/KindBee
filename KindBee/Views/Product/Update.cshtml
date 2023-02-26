@@ -9,34 +9,33 @@
   <form asp-action="Update" asp-controller="Product" asp-anti-forgery="true">
         <div class="validation" asp-validation-summary="ModelOnly"> </div>
       <div class="user-box">
-            <input type="hidden" asp-for="@Model.Id" />
+            <input type="hidden" asp-for="@Model.Id" value="@Model.Id"/>
     </div>
     <div class="user-box">
-      <input type="text" asp-for="Name" placeholder="Наименование" />
+            <input type="text" asp-for="Name" placeholder="Наименование" value="@Model.Name" />
             <label><span asp-validation-for="Name" /></label>
     </div>
       
     <div class="user-box">
-       <input type="text" asp-for="Description" placeholder="Введите описание продукта" />
+            <input type="text" asp-for="Description" placeholder="Введите описание продукта" value="@Model.Description" />
             <label><span asp-validation-for="Description" /></label>
     </div>
     <div class="user-box">
             <label>Введите количество, имеющееся на складе</label>
-       <input type="number" asp-for="Quantity"/>
+            <input type="number" asp-for="Quantity" value="@Model.Quantity" />
             <label><span asp-validation-for="Quantity" /></label>
     </div>
         <div class="user-box">
             <label>Введите дату изготовления продукта</label>
-            <input type="datetime-local" asp-for="DateOfManufacture" />
+            <input type="datetime-local" asp-for="DateOfManufacture" value="@Model.DateOfManufacture" />
             <label><span asp-validation-for="DateOfManufacture" /></label>
         </div>
          <div class="user-box">
             <label>Введите стоимость товара</label>
-       <input type="number" asp-for="Price"/>
+            <input type="number" asp-for="Price" value="@Model.Price" />
             <label><span asp-validation-for="Price" /></label>
     </div>
-            <button type="submit" class="registerbtn">Войти</button>
-             <a asp-action="Update" asp-controller="Product">Добавить продукт</a>
+        <button asp-action="Update" asp-controller="Product" type="submit" class="registerbtn">Обновить продукт</button>
   </form>
 </div>
 

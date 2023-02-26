@@ -15,7 +15,7 @@ namespace KindBee.Controllers
         private readonly ILogger<ProductController> _logger;
 
         IDataAccess<Product> dal;
-
+        KindBeeDBContext dbContext;
         public IActionResult Index()
         {
             return View();
@@ -31,6 +31,7 @@ namespace KindBee.Controllers
         {
             _logger = logger;
             dal =  new ProductDAL(kindBeeDBContext);
+            dbContext = kindBeeDBContext;
         }
 
         [HttpGet(Name = "GetAllItems")]
@@ -83,20 +84,22 @@ namespace KindBee.Controllers
             return View(Product);
         }
 
-        [HttpPut("{id}")]
-        public IActionResult Update(int Id, [FromBody] Product updatedProduct)
+        [HttpPost]
+        public IActionResult Update(Product updatedProduct)
         {
-            if (updatedProduct == null || updatedProduct.Id != Id)
+            if (updatedProduct == null || updatedProduct.Id != updatedProduct.Id)
             {
                 return BadRequest();
             }
 
-            var Product = dal.Get(Id);
+            var Product = dal.Get(updatedProduct.Id);
             if (Product == null)
             {
                 return NotFound();
             }
 
+          
+            dbContext.Attach(updatedProduct);
             dal.Update(updatedProduct);
             return RedirectToRoute("GetAllItems");
         }

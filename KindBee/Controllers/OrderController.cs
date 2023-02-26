@@ -1,4 +1,5 @@
-﻿using KindBee.DB.DAL;
+﻿using KindBee.DB;
+using KindBee.DB.DAL;
 using KindBee.DB.DBModels;
 using KindBee.DB.Interfaces;
 using KindBee.Models;
@@ -12,9 +13,29 @@ namespace KindBee.Controllers
         private readonly ILogger<OrderController> _logger;
 
         IDataAccess<Order> dal;
+
+        IDataAccess<Basket> basketDAL;
+        IDataAccess<Customer> customerDAL;
+        IDataAccess<Position> positionDAL;
+        IDataAccess<Product> productDAL;
+        KindBeeDBContext _kindBeeDBContext;
+
         public IActionResult Index()
         {
-            return View();
+            int id;
+            if (int.TryParse(HttpContext.User.Claims.ToList().First().Value, out id))
+            {
+                var customer = customerDAL.Get(id);
+                if (customer != null) //если такой клиент существует
+                {
+                    var order = new Order() { Customer = customer, CustomerId = customer.Id, DateOfRegistration = DateTime.Now, Positions = customer.Basket.Positions };
+                    customer.Basket.Positions = new List<Position>();
+                    _kindBeeDBContext.SaveChanges();
+                    dal.Add(order);
+                }
+                return RedirectToAction("Error", "Home");
+            }
+            return RedirectToAction("Error", "Home");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
@@ -23,10 +44,16 @@ namespace KindBee.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        public OrderController(IDataAccess<Order> dal, ILogger<OrderController> logger)
+        public OrderController(KindBeeDBContext kindBeeDbKindBeeDbContext, ILogger<OrderController> logger)
         {
             _logger = logger;
-            dal = dal;
+            dal = new OrderDAL(kindBeeDbKindBeeDbContext);
+            basketDAL = new BasketDAL(kindBeeDbKindBeeDbContext);
+            customerDAL = new CustomerDAL(kindBeeDbKindBeeDbContext);
+            positionDAL = new PositionDAL(kindBeeDbKindBeeDbContext);
+            productDAL = new ProductDAL(kindBeeDbKindBeeDbContext);
+            _kindBeeDBContext = kindBeeDbKindBeeDbContext;
+            _logger = logger;
         }
 
         [HttpGet(Name = "GetAllItems")]

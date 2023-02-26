@@ -1,42 +1,179 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Мои заказы";
 }
-@model KindBee.DB.DBModels.Order
+@model KindBee.DB.DBModels.Basket;
 
 <head>
     <link rel="stylesheet" href="~/css/groceryShowcase.css" />
+
+    <script type="text/jscript" src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
+
 </head>
 <div class="text-center">
-    <h1 class="display-4">Мои заказы</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-    <h2>Поздравляем! Вы успешно оформили заказ</h2>
+    @if (Model.Positions == null)
+    {
+        <h2>Ваша корзина пуста</h2>
+    }
+    else
+    {
 
-    <h2>Вам позвонят в течении .....</h2>
-
-    <table class="table">
-        <thead>
-            <tr>
-               <th>Наименование продукта</th>
-                <th>Цена за 1 продукт</th>
-                <th>количество</th>
-                <th>Итого за позицию</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model.Positions)
-            {
+        <table class="table">
+            <thead>
                 <tr>
-                    <td>@item.Product.Name</td>
-                    <td>@item.Product.Price</td>
-                    <td>@item.Quantity</td>
-
-                    <td><a href="@Url.Action("Delete", "Order", item.Id)">Отменить заказ</a></td>
+                    <th>Наименование продукта</th>
+                    <th>Цена за 1 шт.</th>
+                    <th>Количество</th>
+                    <th></th>
+                    <th></th>
                 </tr>
-            }
-        </tbody>
-    </table>
-    <a href="@Url.Action("DeleteAllPositions", "Basket")">Все заказы</a>
-    <a href="@Url.Action("Index", "Order")">Оформить заказ</a>
+            </thead>
+            <tbody id="tableBody">
+                @foreach (var item in Model.Positions)
+                {
+                    <tr>
+                        <td>@item.Product.Name</td>
+                        <td name="price">@item.Product.Price</td>
+                        <td name="quantity">@item.Quantity</td>
+                        <td name="m">
+                            <button onclick="AddOneProductInBasket(@item.Product.Id, this)" type="submit" class="plus-btn">+</button>
+                            <button onclick="DeleteOneProductFromBasket(@item.Product.Id, this)" type="submit" class="minus-btn">-</button>
+                            <button class="delete" onclick="DeletePositionFromBasket(@item.Product.Id, this)">Удалить этот продукт</button>
+                        </td>
+                    </tr>
+
+                }
+                <tr><td>Итого - <p class="totalSum" name="totalSum" id="totalSum"> @Model.TotalSum</p>рублей</td></tr>
+            </tbody>
+        </table>
+        <button class="delete" onclick="ReCountTotalSum()">тест</button>
+        <button class="delete" onclick="DeleteAllPositions()">Очистить корзину</button>
+        <a href="@Url.Action("Init", "Order")">Оформить заказ</a>
+    }
+
+
     <a href="@Url.Action("Index", "Home")">Перейти на главную</a>
 </div>
+<script type="text/jscript">
+    function ReCountTotalSum() {
+
+        var total = 0;
+
+        let strings = $("#tableBody").children();
+
+        for (let i = 0; i < strings.length; i++) {
+
+            try {
+                let price = parseFloat(strings[i].children[1].textContent);
+                let quantity = Number(strings[i].children[2].textContent);
+                total += price * quantity;
+            } catch (e) {
+
+            }
+        }
+
+        document.querySelector('.totalSum').textContent = total;
+        /*
+       //alert(total);
+       // e = document.getElementByName('totalSum');
+       //alert($("#totalSum").content);
+       //let strings = document.getElementsByTagName('tr');
+       //document.querySelector('#totalSum')[0].textContent = 'asdfhgfdgf';
+       //document.getElementByName('totalSum').textContent = 'asdfhgfdgf';
+
+       //$("#tableBody").children[$("#tableBody").children().length - 1].children[0].textContent = total;
+       //$("#totalSum").textContent = 'asdfasdfawsd';
+       //$("#tableBody").children()[0].
+       // alert(t);
+       //t.children().forEach(function (elem) {
+       //    alert(elem.tagName); // HEAD, текст, BODY
+       //});
+
+       //$("#tableBody").children().$each(function (index, object) {
+       //    var Input = $(object);
+       //    total += Input.children("#m").children("#quantityInBasket").value;
+       //    alert(total);
+       //});
+
+       // alert($("#tableBody").children());
+       //for (var t of $("#tableBody").children()) {
+       //    total += t.children("#m").children("#quantityInBasket").value;
+
+       //}
+       */
+    }
+
+    function AddOneProductInBasket(Id, el) {
+        var product = el.parentNode.parentNode;
+        var count = Number(product.children[2].textContent);
+
+
+        if (product.children[0].max < count) {
+            return;
+        }
+        $.post("/Basket/AddOneProductInBasket", { id: Id })
+            .done(function (data) {
+                if (data == 200) {
+                    count++;
+                    product.children[2].textContent = count;
+                    ReCountTotalSum();
+                }
+                else {
+                    alert("Не удалось добавить товар из-за проблемы на сервере. Повторите операцию позже");
+                }
+            });
+    };
+
+    function DeleteOneProductFromBasket(Id, el) {
+        var product = el.parentNode.parentNode;
+        var count = Number(product.children[2].textContent);
+        $.post("/Basket/DeleteOneProductFromBasket", { id: Id })
+            .done(function (data) {
+
+
+                if (data == 204) {
+                    var row = el.parentNode.parentNode;
+                    row.remove();
+
+                    return;
+                }
+                else if (data == 200) {
+                    count--;
+                    product.children[2].textContent = count;
+                    ReCountTotalSum();
+                }
+                else {
+                    alert("Не удалось удалить из-за проблемы на сервере. Повторите операцию позже");
+                }
+            });
+    };
+
+
+    function DeletePositionFromBasket(Id, el) {
+        $.post("/Basket/DeletePosition", { id: Id })
+            .done(function (data) {
+                if (data == 200) {
+                    var str = el.parentNode.parentNode;
+                    str.remove();
+                    ReCountTotalSum();
+                    return;
+                }
+                else {
+                    alert("Не удалось удалить из-за проблемы на сервере. Повторите операцию позже");
+                }
+            });
+    };
+
+    function DeleteAllPositions() {
+        $.post("/Basket/DeleteAllPositions")
+            .done(function (data) {
+                if (data == 200) {
+                    $("#tableBody").children().remove();
+                    return;
+                }
+                else {
+                    alert("Не удалось удалить из-за проблемы на сервере. Повторите операцию позже");
+                }
+            });
+    };
+
+</script>

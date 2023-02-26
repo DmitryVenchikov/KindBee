@@ -1,4 +1,5 @@
-﻿using KindBee.DB;
+﻿using System.Data.Entity;
+using KindBee.DB;
 using KindBee.DB.DAL;
 using KindBee.DB.DBModels;
 using KindBee.DB.Interfaces;
@@ -15,7 +16,7 @@ namespace KindBee.Controllers
         IDataAccess<Position> positionDAL;
         IDataAccess<Basket> basketDAL;
         IDataAccess<Product> productDAL;
-
+        KindBeeDBContext dbContext;
         public AdminController(KindBeeDBContext kindBeeDBContext, ILogger<HomeController> logger)
         {
             _logger = logger;
@@ -23,11 +24,12 @@ namespace KindBee.Controllers
             positionDAL = new PositionDAL(kindBeeDBContext);
             basketDAL = new BasketDAL(kindBeeDBContext);
             productDAL = new ProductDAL(kindBeeDBContext);
+            dbContext = kindBeeDBContext;
         }
         //защитить
         public IActionResult Init()
         {
-            return View(productDAL.Get());
+            return View(dbContext.Products);
         }
 
         public IActionResult Privacy()
