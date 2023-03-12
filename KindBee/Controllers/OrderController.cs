@@ -12,13 +12,13 @@ namespace KindBee.Controllers
     {
         private readonly ILogger<OrderController> _logger;
 
-        IDataAccess<Order> dal;
+        static IDataAccess<Order> dal;
 
-        IDataAccess<Basket> basketDAL;
-        IDataAccess<Customer> customerDAL;
-        IDataAccess<Position> positionDAL;
-        IDataAccess<Product> productDAL;
-        KindBeeDBContext _kindBeeDBContext;
+        static IDataAccess<Basket> basketDAL;
+        static IDataAccess<Customer> customerDAL;
+        static IDataAccess<Position> positionDAL;
+        static IDataAccess<Product> productDAL;
+        static KindBeeDBContext _kindBeeDBContext;
 
         public IActionResult Index()
         {
@@ -44,16 +44,15 @@ namespace KindBee.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        public OrderController(KindBeeDBContext kindBeeDbKindBeeDbContext, ILogger<OrderController> logger)
+        public OrderController(ILogger<OrderController> logger)
         {
             _logger = logger;
-            dal = new OrderDAL(kindBeeDbKindBeeDbContext);
-            basketDAL = new BasketDAL(kindBeeDbKindBeeDbContext);
-            customerDAL = new CustomerDAL(kindBeeDbKindBeeDbContext);
-            positionDAL = new PositionDAL(kindBeeDbKindBeeDbContext);
-            productDAL = new ProductDAL(kindBeeDbKindBeeDbContext);
-            _kindBeeDBContext = kindBeeDbKindBeeDbContext;
-            _logger = logger;
+            _kindBeeDBContext = KindBeeDBContext.GetContext();
+            dal = new OrderDAL(_kindBeeDBContext);
+            basketDAL = new BasketDAL(_kindBeeDBContext);
+            customerDAL = new CustomerDAL(_kindBeeDBContext);
+            positionDAL = new PositionDAL(_kindBeeDBContext);
+            productDAL = new ProductDAL(_kindBeeDBContext);
         }
 
         [HttpGet(Name = "GetAllItems")]

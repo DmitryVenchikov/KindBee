@@ -14,19 +14,31 @@ namespace KindBee.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        IDataAccess<Customer> customerDAL;
-        IDataAccess<Position> positionDAL;
-        IDataAccess<Basket> basketDAL;
-        IDataAccess<Product> productDAL;
-        KindBeeDBContext _kindBeeDBContext;
-        public HomeController(KindBeeDBContext kindBeeDBContext, ILogger<HomeController> logger)
+        static IDataAccess<Customer> customerDAL;
+        static IDataAccess<Position> positionDAL;
+        static IDataAccess<Basket> basketDAL;
+        static IDataAccess<Product> productDAL;
+        static  KindBeeDBContext _kindBeeDBContext;
+        //public HomeController(KindBeeDBContext kindBeeDBContext, ILogger<HomeController> logger)
+        //{
+        //    _logger = logger;
+        //    customerDAL = new CustomerDAL(kindBeeDBContext);
+        //    positionDAL = new PositionDAL(kindBeeDBContext);
+        //    basketDAL = new BasketDAL(kindBeeDBContext);
+        //    productDAL = new ProductDAL(kindBeeDBContext);
+        //    _kindBeeDBContext = kindBeeDBContext;
+        //}
+
+
+        public HomeController( ILogger<HomeController> logger)
         {
             _logger = logger;
-            customerDAL = new CustomerDAL(kindBeeDBContext);
-            positionDAL = new PositionDAL(kindBeeDBContext);
-            basketDAL = new BasketDAL(kindBeeDBContext);
-            productDAL = new ProductDAL(kindBeeDBContext);
-            _kindBeeDBContext = kindBeeDBContext;
+            _kindBeeDBContext =  KindBeeDBContext.GetContext();
+            customerDAL = new CustomerDAL(_kindBeeDBContext);
+            positionDAL = new PositionDAL(_kindBeeDBContext);
+            basketDAL = new BasketDAL(_kindBeeDBContext);
+            productDAL = new ProductDAL(_kindBeeDBContext);
+          
         }
         [Authorize(Roles = "customer")]
         public IActionResult Index()

@@ -4,11 +4,13 @@ using KindBee.DB.Interfaces;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
+
+
 builder.Services.AddControllersWithViews();
 
 
@@ -21,10 +23,9 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
                     options.LoginPath = new Microsoft.AspNetCore.Http.PathString("/Account/Login");
                     options.AccessDeniedPath = new Microsoft.AspNetCore.Http.PathString("/Account/Login");
                 });
-builder.Services.AddDbContext<KindBeeDBContext>(options => options.UseSqlServer(builder.Configuration["DefaultConnection"])
-//.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)
-.EnableSensitiveDataLogging()
-);
+builder.Services.AddHttpContextAccessor();
+//builder.Services.AddDbContext<KindBeeDBContext>(options => options.UseSqlServer(builder.Configuration["DefaultConnection"]));
+
 //builder.Services.AddTransient<IDataAccess, >();
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession();
@@ -46,6 +47,7 @@ app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();   // добавление middleware авторизации 
+//app.UseMiddleware<MiddleWare>();
 
 app.MapControllerRoute(
     name: "default",

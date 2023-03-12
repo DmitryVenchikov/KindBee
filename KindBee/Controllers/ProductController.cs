@@ -5,6 +5,7 @@ using KindBee.DB.DBModels;
 using KindBee.DB.Interfaces;
 using KindBee.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 using System.IO;
 
@@ -14,8 +15,8 @@ namespace KindBee.Controllers
     {
         private readonly ILogger<ProductController> _logger;
 
-        IDataAccess<Product> dal;
-        KindBeeDBContext dbContext;
+        static IDataAccess<Product> dal;
+        static KindBeeDBContext dbContext;
         public IActionResult Index()
         {
             return View();
@@ -27,11 +28,20 @@ namespace KindBee.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        public ProductController(KindBeeDBContext kindBeeDBContext , ILogger<ProductController> logger)
+        //public ProductController(KindBeeDBContext kindBeeDBContext , ILogger<ProductController> logger)
+        //{
+        //    _logger = logger;
+        //    dbContext = kindBeeDBContext;
+        //    dal =  new ProductDAL(kindBeeDBContext);
+
+        //}
+
+        public ProductController(ILogger<ProductController> logger)
         {
             _logger = logger;
-            dal =  new ProductDAL(kindBeeDBContext);
-            dbContext = kindBeeDBContext;
+            dbContext = KindBeeDBContext.GetContext();
+            dal = new ProductDAL(dbContext);
+
         }
 
         [HttpGet(Name = "GetAllItems")]
@@ -97,11 +107,15 @@ namespace KindBee.Controllers
             {
                 return NotFound();
             }
+           
 
-          
-            dbContext.Attach(updatedProduct);
+         //   dbContext.Attach<Product>(updatedProduct).State = EntityState.Modified;
+
+
+
+
             dal.Update(updatedProduct);
-            return RedirectToRoute("GetAllItems");
+            return RedirectToAction("Init", "Admin");
         }
 
         [HttpPost]

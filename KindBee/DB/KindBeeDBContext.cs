@@ -12,6 +12,8 @@ namespace KindBee.DB
         public DbSet<Basket> Baskets { get; set; } = null!;
         public DbSet<Position> Positions { get; set; } = null!;
 
+        private static KindBeeDBContext instance;
+
         public KindBeeDBContext()
         {
             //Database.EnsureDeleted();   // удаляем бд со старой схемой
@@ -24,7 +26,18 @@ namespace KindBee.DB
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseLazyLoadingProxies().UseSqlServer("Data Source=DESKTOP-VHEI76T;MultipleActiveResultSets=true;Initial Catalog=KindBee;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
+            //if (!optionsBuilder.IsConfigured)
+            //{
+                optionsBuilder.UseLazyLoadingProxies().UseSqlServer("Data Source=DESKTOP-VHEI76T;MultipleActiveResultSets=true;Initial Catalog=KindBee;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
+
+            //}
+        }
+
+        public static KindBeeDBContext GetContext()
+        {
+            //if (instance == null)
+                instance = new KindBeeDBContext();
+            return instance;
         }
     }
 }

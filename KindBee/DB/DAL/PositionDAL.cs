@@ -1,5 +1,7 @@
 ﻿using KindBee.DB.DBModels;
 using KindBee.DB.Interfaces;
+using Microsoft.EntityFrameworkCore;
+
 
 namespace KindBee.DB.DAL
 {
@@ -28,12 +30,12 @@ namespace KindBee.DB.DAL
 
         public IEnumerable<Position> Get()
         {
-            return context.Positions;
+            return context.Positions.AsNoTracking().ToList();
         }
 
         public Position Get(int id)
         {
-            return context.Positions.Find(id);
+            return context.Positions.AsNoTracking<Position>().Where(t => t.Id == id).First();
         }
 
         public void Update(Position item)

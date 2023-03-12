@@ -12,7 +12,7 @@ namespace KindBee.Controllers
     {
         private readonly ILogger<CustomerController> _logger;
 
-        IDataAccess<Customer> dal;
+        static IDataAccess<Customer> dal;
 
         public IActionResult Index()
         {
@@ -25,10 +25,10 @@ namespace KindBee.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        public CustomerController(KindBeeDBContext kindBeeDBContext, ILogger<CustomerController> logger)
+        public CustomerController( ILogger<CustomerController> logger)
         {
             _logger = logger;
-            dal = new CustomerDAL(kindBeeDBContext);
+            dal = new CustomerDAL(KindBeeDBContext.GetContext());
         }
 
         [HttpGet(Name = "GetAllItems")]

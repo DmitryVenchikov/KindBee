@@ -1,11 +1,13 @@
-﻿using KindBee.DB.DBModels;
+﻿
+using KindBee.DB.DBModels;
 using KindBee.DB.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace KindBee.DB.DAL
 {
     public class CustomerDAL : IDataAccess<Customer>
     {
-        KindBeeDBContext context;
+        static KindBeeDBContext context;
         public CustomerDAL(KindBeeDBContext kindBeeDBContext) {
             context = kindBeeDBContext;
         }
@@ -28,7 +30,7 @@ namespace KindBee.DB.DAL
 
         public IEnumerable<Customer> Get()
         {
-            return context.Customers;
+            return context.Customers.AsNoTracking();
         }
 
         public Customer Get(int id)

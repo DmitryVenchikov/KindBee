@@ -1,5 +1,6 @@
 ﻿using KindBee.DB.DBModels;
 using KindBee.DB.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace KindBee.DB.DAL
 {
@@ -28,12 +29,12 @@ namespace KindBee.DB.DAL
 
         public IEnumerable<Basket> Get()
         {
-            return context.Baskets;
+            return context.Baskets.AsNoTracking().ToList();
         }
 
         public Basket Get(int id)
         {
-            return context.Baskets.Find(id);
+            return context.Baskets.AsNoTracking<Basket>().Where(t=>t.Id==id).First();
         }
 
         public void Update(Basket item)

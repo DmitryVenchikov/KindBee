@@ -14,20 +14,21 @@ namespace KindBee.Controllers
     {
         private readonly ILogger<BasketController> _logger;
 
-        IDataAccess<Basket> basketDAL;
-        IDataAccess<Customer> customerDAL;
-        IDataAccess<Position> positionDAL;
-        IDataAccess<Product> productDAL;
-        KindBeeDBContext _kindBeeDBContext;
+        static IDataAccess<Basket> basketDAL;
+        static IDataAccess<Customer> customerDAL;
+        static IDataAccess<Position> positionDAL;
+        static IDataAccess<Product> productDAL;
+        static KindBeeDBContext _kindBeeDBContext;
 
-        public BasketController(KindBeeDBContext kindBeeDbKindBeeDbContext, ILogger<BasketController> logger)
+        public BasketController( ILogger<BasketController> logger)
         {
             _logger = logger;
-            basketDAL = new BasketDAL(kindBeeDbKindBeeDbContext);
-            customerDAL = new CustomerDAL(kindBeeDbKindBeeDbContext);
-            positionDAL = new PositionDAL(kindBeeDbKindBeeDbContext);
-            productDAL = new ProductDAL(kindBeeDbKindBeeDbContext);
-            _kindBeeDBContext = kindBeeDbKindBeeDbContext;
+            _kindBeeDBContext = KindBeeDBContext.GetContext();
+            basketDAL = new BasketDAL(_kindBeeDBContext);
+            customerDAL = new CustomerDAL(_kindBeeDBContext);
+            positionDAL = new PositionDAL(_kindBeeDBContext);
+            productDAL = new ProductDAL(_kindBeeDBContext);
+          
         }
 
         [Authorize(Roles = "customer")]

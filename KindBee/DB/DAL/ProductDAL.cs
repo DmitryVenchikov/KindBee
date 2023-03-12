@@ -1,5 +1,7 @@
 ﻿using KindBee.DB.DBModels;
 using KindBee.DB.Interfaces;
+using KindBee.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace KindBee.DB.DAL
 {
@@ -23,23 +25,27 @@ namespace KindBee.DB.DAL
                 context.Products.Remove(t);
                 context.SaveChanges();
             }
-         
             return t;
         }
 
         public IEnumerable<Product> Get()
         {
-            return context.Products;
+            return context.Products.AsNoTracking();
         }
 
         public Product Get(int id)
         {
-            return context.Products.Find(id);
+            // Entry<Product>(t).State = EntityState.Detached;
+           // t.State = EntityState.Detached;
+
+            return context.Products.AsNoTracking<Product>().Where(t=>t.Id==id).First();
         }
 
         public void Update(Product item)
         {
-            context.Products.Update(item);
+            context.Entry(item).State= EntityState.Detached;
+            //context.SaveChanges();
+            context.Set<Product>().Update(item);
             context.SaveChanges();
         }
     }

@@ -17,8 +17,8 @@ namespace KindBee.Controllers
     {
         private readonly ILogger<CustomerController> _logger;
 
-        IDataAccess<Customer> dal;
-        IDataAccess<Basket> basketDAL;
+        static IDataAccess<Customer> dal;
+        static IDataAccess<Basket> basketDAL;
 
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
@@ -27,11 +27,18 @@ namespace KindBee.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        public AccountController(KindBeeDBContext kindBeeDBContext, ILogger<CustomerController> logger)
+        //public AccountController(KindBeeDBContext kindBeeDBContext, ILogger<CustomerController> logger)
+        //{
+        //    _logger = logger;
+        //    dal = new CustomerDAL(kindBeeDBContext);
+        //    basketDAL = new BasketDAL(kindBeeDBContext);
+        //}
+
+        public AccountController(ILogger<CustomerController> logger)
         {
             _logger = logger;
-            dal = new CustomerDAL(kindBeeDBContext);
-            basketDAL = new BasketDAL(kindBeeDBContext);
+            dal = new CustomerDAL(KindBeeDBContext.GetContext());
+            basketDAL = new BasketDAL(KindBeeDBContext.GetContext());
         }
 
         string GetHash(string input)
