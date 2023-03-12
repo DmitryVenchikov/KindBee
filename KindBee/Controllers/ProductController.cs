@@ -90,31 +90,38 @@ namespace KindBee.Controllers
         [HttpGet]
         public IActionResult Update(int id)
         {
-            Product Product = dal.Get(id);
-            return View(Product);
+            Product product = dal.Get(id);
+            var vm = new ProductVM()
+            { Id = product.Id, DateOfManufacture = product.DateOfManufacture, Description = product.Description, Name = product.Name, Price = product.Price, Quantity = product.Quantity};
+
+            return View(vm);
         }
 
         [HttpPost]
-        public IActionResult Update(Product updatedProduct)
+        public IActionResult Update(ProductVM Product)
         {
-            if (updatedProduct == null || updatedProduct.Id != updatedProduct.Id)
+            if (Product == null)
             {
                 return BadRequest();
             }
 
-            var Product = dal.Get(updatedProduct.Id);
-            if (Product == null)
+            var pr = dal.Get(Product.Id);
+            if (pr == null)
             {
                 return NotFound();
             }
-           
 
-         //   dbContext.Attach<Product>(updatedProduct).State = EntityState.Modified;
+            var p = new Product() {Id = Product.Id, Name = Product.Name, DateOfManufacture = Product.DateOfManufacture, Description = Product.Description, Price = Product.Price, Quantity = Product.Quantity };
 
+            using (var stream = Product.Image.OpenReadStream())
+            {
+                byte[] buffer = new byte[stream.Length];
+                // считываем данные
+                stream.ReadAsync(buffer, 0, buffer.Length);
+                p.Image = buffer;
+            }
 
-
-
-            dal.Update(updatedProduct);
+            dal.Update(p);
             return RedirectToAction("Init", "Admin");
         }
 

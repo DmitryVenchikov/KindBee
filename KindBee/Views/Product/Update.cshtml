@@ -1,4 +1,4 @@
-﻿@model KindBee.DB.DBModels.Product;
+﻿@model KindBee.Models.ProductVM;
 @{
     ViewData["Title"] = "Обновление продукта";
 }
@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="~/css/Login.css" />
 </head>
 <div class="login-box">
-  <form asp-action="Update" asp-controller="Product" asp-anti-forgery="true">
+    <form asp-action="Update" asp-controller="Product" asp-anti-forgery="true" enctype="multipart/form-data">
         <div class="validation" asp-validation-summary="ModelOnly"> </div>
       <div class="user-box">
             <input type="hidden" asp-for="@Model.Id" value="@Model.Id"/>
@@ -19,22 +19,38 @@
     <div class="user-box">
             <input type="text" asp-for="Description" placeholder="Введите описание продукта" value="@Model.Description" />
             <label><span asp-validation-for="Description" /></label>
-    </div>
+    </div>  
     <div class="user-box">
             <label>Введите количество, имеющееся на складе</label>
             <input type="number" asp-for="Quantity" value="@Model.Quantity" />
             <label><span asp-validation-for="Quantity" /></label>
     </div>
+
+@*        <div class="user-box">
+            <label>Загрузите фото продукта</label>
+            <input asp-for="Image" type="file" name="Image" multiple accept="image/*,image/jpeg,image/jpg" placeholder="Фото продукта">
+        </div>*@
+
+        <div class="user-box">
+            <p>Загрузите фото продукта</p>
+            <p>
+                <input asp-for="Image" type="file" name="Image" multiple accept="image/*,image/jpeg,image/jpg" placeholder="Фото продукта">
+            <p/>
+        </div>
+
         <div class="user-box">
             <label>Введите дату изготовления продукта</label>
-            <input type="datetime-local" asp-for="DateOfManufacture" value="@Model.DateOfManufacture" />
+            <input type="datetime" step="any" asp-for="DateOfManufacture" value="@Model.DateOfManufacture" />
             <label><span asp-validation-for="DateOfManufacture" /></label>
         </div>
+       
          <div class="user-box">
             <label>Введите стоимость товара</label>
-            <input type="number" asp-for="Price" value="@Model.Price" />
+            <input type="number" asp-for="Price" value="@((int)Model.Price)" />
             <label><span asp-validation-for="Price" /></label>
-    </div>
+         </div>
+
+     
         <button asp-action="Update" asp-controller="Product" type="submit" class="registerbtn">Обновить продукт</button>
   </form>
 </div>

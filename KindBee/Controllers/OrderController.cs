@@ -20,7 +20,7 @@ namespace KindBee.Controllers
         static IDataAccess<Product> productDAL;
         static KindBeeDBContext _kindBeeDBContext;
 
-        public IActionResult Index()
+        public IActionResult Init()
         {
             int id;
             if (int.TryParse(HttpContext.User.Claims.ToList().First().Value, out id))
@@ -28,10 +28,24 @@ namespace KindBee.Controllers
                 var customer = customerDAL.Get(id);
                 if (customer != null) //если такой клиент существует
                 {
-                    var order = new Order() { Customer = customer, CustomerId = customer.Id, DateOfRegistration = DateTime.Now, Positions = customer.Basket.Positions };
+                    var order = new Order() { Customer = customer, DateOfRegistration = DateTime.Now };
+                    dal.Add(order);
+                    _kindBeeDBContext.SaveChanges();
+
+                    var orderId = dal.Get().ToList().Last().Id;
+                    //for(int i=0; i< customer.Basket.Positions.Count(); i++)
+                    //{
+                        
+                    //}
+                    foreach (var p in customer.Basket.Positions)
+                    {
+                        p.OrderId = orderId;
+                    }
+
                     customer.Basket.Positions = new List<Position>();
                     _kindBeeDBContext.SaveChanges();
-                    dal.Add(order);
+
+                    return RedirectToAction("Index", "Home");
                 }
                 return RedirectToAction("Error", "Home");
             }

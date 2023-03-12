@@ -35,8 +35,11 @@ namespace KindBee.DB
 
         public static KindBeeDBContext GetContext()
         {
-            //if (instance == null)
-                instance = new KindBeeDBContext();
+            if (instance != null)
+            {
+                instance.Dispose();
+            }
+            instance = new KindBeeDBContext();
             return instance;
         }
     }

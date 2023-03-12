@@ -5,7 +5,9 @@ VisualStudioVersion = 17.4.33205.214
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KindBee", "KindBee\KindBee.csproj", "{87AB3797-7AEB-4BD9-BA53-3FADA4AAD70A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp1", "ConsoleApp1\ConsoleApp1.csproj", "{5958E97F-4049-441B-A423-57F901FAE6AC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleApp1", "ConsoleApp1\ConsoleApp1.csproj", "{5958E97F-4049-441B-A423-57F901FAE6AC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SendLib", "SendLib\SendLib.csproj", "{EBACA984-BBF3-4883-9457-4058091C74D5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{5958E97F-4049-441B-A423-57F901FAE6AC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5958E97F-4049-441B-A423-57F901FAE6AC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5958E97F-4049-441B-A423-57F901FAE6AC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EBACA984-BBF3-4883-9457-4058091C74D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EBACA984-BBF3-4883-9457-4058091C74D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EBACA984-BBF3-4883-9457-4058091C74D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EBACA984-BBF3-4883-9457-4058091C74D5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

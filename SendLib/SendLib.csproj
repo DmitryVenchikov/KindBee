@@ -1,15 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\KindBee\KindBee.csproj" />
-    <ProjectReference Include="..\SendLib\SendLib.csproj" />
+    <PackageReference Include="MailKit" Version="3.6.0" />
   </ItemGroup>
 
 </Project>
