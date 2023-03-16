@@ -29,12 +29,14 @@ namespace KindBee.DB.DAL
 
         public IEnumerable<Basket> Get()
         {
-            return context.Baskets.AsNoTracking().ToList();
+            //return context.Baskets.AsNoTracking().ToList();
+            return context.Baskets.ToList();
         }
 
         public Basket Get(int id)
         {
-            return context.Baskets.AsNoTracking<Basket>().Where(t=>t.Id==id).First();
+            //return context.Baskets.AsNoTracking<Basket>().Where(t=>t.Id==id).First();
+            return context.Baskets.Where(t => t.Id == id).First();
         }
 
         public void Update(Basket item)

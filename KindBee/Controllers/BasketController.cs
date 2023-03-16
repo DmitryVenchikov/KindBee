@@ -5,6 +5,7 @@ using KindBee.DB.Interfaces;
 using KindBee.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Data;
 using System.Diagnostics;
 
@@ -20,7 +21,7 @@ namespace KindBee.Controllers
         static IDataAccess<Product> productDAL;
         static KindBeeDBContext _kindBeeDBContext;
 
-        public BasketController( ILogger<BasketController> logger)
+        public BasketController(ILogger<BasketController> logger)
         {
             _logger = logger;
             _kindBeeDBContext = KindBeeDBContext.GetContext();
@@ -28,7 +29,7 @@ namespace KindBee.Controllers
             customerDAL = new CustomerDAL(_kindBeeDBContext);
             positionDAL = new PositionDAL(_kindBeeDBContext);
             productDAL = new ProductDAL(_kindBeeDBContext);
-          
+
         }
 
         [Authorize(Roles = "customer")]
@@ -64,10 +65,12 @@ namespace KindBee.Controllers
 
             if (int.TryParse(HttpContext.User.Claims.ToList().First().Value, out userId))
             {
-                var customer = customerDAL.Get(userId);
-                if (customer != null) //если такой клиент существует
+                customerDAL = new CustomerDAL(_kindBeeDBContext);
+                // var customer = customerDAL.Get(userId);
+                var customer = _kindBeeDBContext.Customers.Find(userId);
+                    if (customer != null) //если такой клиент существует
                 {
-                    var product = productDAL.Get(id);
+                    var product = _kindBeeDBContext.Products.Find(id);
                     if (customer.Basket.Positions.Where(t => t.Product.Id == id).Count() <= 0)//если такой продукт не существует в корзине клиента
                     {
                         //по идее невозможный случай
@@ -82,8 +85,19 @@ namespace KindBee.Controllers
                         {
                             positionDAL.Delete(position.Id);
                             //добавляем на склад
-                            product.Quantity++;
-                            _kindBeeDBContext.SaveChanges();
+                                                        try
+                            {
+                                //_kindBeeDBContext.Entry(product).State = EntityState.Modified; // added row
+                                product.Quantity++;
+                                _kindBeeDBContext.SaveChanges();
+
+
+                            }
+                            catch (Exception ex)
+                            {
+                                var tr = ex;
+                            }
+
                             return StatusCodes.Status204NoContent;
                         }
                     }
@@ -157,7 +171,7 @@ namespace KindBee.Controllers
 
 
         [HttpPost]
-        public int  DeleteAllPositions()
+        public int DeleteAllPositions()
         {
             int id;
             if (int.TryParse(HttpContext.User.Claims.ToList().First().Value, out id))
@@ -165,13 +179,13 @@ namespace KindBee.Controllers
                 var customer = customerDAL.Get(id);
                 if (customer != null) //если такой клиент существует
                 {
-                        foreach (var t in customer.Basket.Positions.ToList())
-                        {
-                            t.Product.Quantity += t.Quantity;
-                            customer.Basket.Positions.Remove(t);
-                        }
-                        _kindBeeDBContext.SaveChanges();
-                        return StatusCodes.Status200OK;
+                    foreach (var t in customer.Basket.Positions.ToList())
+                    {
+                        t.Product.Quantity += t.Quantity;
+                        customer.Basket.Positions.Remove(t);
+                    }
+                    _kindBeeDBContext.SaveChanges();
+                    return StatusCodes.Status200OK;
                 }
                 return StatusCodes.Status203NonAuthoritative;
             }

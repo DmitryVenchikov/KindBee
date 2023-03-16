@@ -1,5 +1,7 @@
 ﻿using KindBee.DB.DBModels;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using System;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace KindBee.DB
@@ -28,17 +30,16 @@ namespace KindBee.DB
         {
             //if (!optionsBuilder.IsConfigured)
             //{
-                optionsBuilder.UseLazyLoadingProxies().UseSqlServer("Data Source=DESKTOP-VHEI76T;MultipleActiveResultSets=true;Initial Catalog=KindBee;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
-
+                optionsBuilder.UseLazyLoadingProxies().UseSqlServer("Data Source=DESKTOP-V22KSA0\\MSSQLSERVER01;Initial Catalog=KindBee;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
             //}
         }
 
         public static KindBeeDBContext GetContext()
         {
-            if (instance != null)
-            {
-                instance.Dispose();
-            }
+            //if (instance != null)
+            //{
+            //    instance.Dispose();
+            //}
             instance = new KindBeeDBContext();
             return instance;
         }

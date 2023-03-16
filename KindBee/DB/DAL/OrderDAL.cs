@@ -30,12 +30,14 @@ namespace KindBee.DB.DAL
 
         public IEnumerable<Order> Get()
         {
-            return context.Orders.AsNoTracking().ToList();
+            //return context.Orders.AsNoTracking().ToList();
+            return context.Orders.ToList();
         }
 
         public Order Get(int id)
         {
-            return context.Orders.AsNoTracking<Order>().Where(t => t.Id == id).First();
+            //return context.Orders.AsNoTracking<Order>().Where(t => t.Id == id).First();
+            return context.Orders.Where(t => t.Id == id).First();
         }
 
         public void Update(Order item)

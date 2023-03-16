@@ -30,15 +30,17 @@ namespace KindBee.DB.DAL
 
         public IEnumerable<Product> Get()
         {
-            return context.Products.AsNoTracking().ToList();
+            //return context.Products.AsNoTracking().ToList();
+            return context.Products.ToList();
         }
 
         public Product Get(int id)
         {
             // Entry<Product>(t).State = EntityState.Detached;
-           // t.State = EntityState.Detached;
+            // t.State = EntityState.Detached;
 
-            return context.Products.AsNoTracking<Product>().Where(t=>t.Id==id).First();
+            //return context.Products.AsNoTracking<Product>().Where(t=>t.Id==id).First();
+            return context.Products.Where(t => t.Id == id).First();
         }
 
         public void Update(Product item)

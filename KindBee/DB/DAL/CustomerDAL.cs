@@ -30,7 +30,7 @@ namespace KindBee.DB.DAL
 
         public IEnumerable<Customer> Get()
         {
-            return context.Customers.AsNoTracking();
+            return context.Customers.ToList();
         }
 
         public Customer Get(int id)

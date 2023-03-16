@@ -9,8 +9,9 @@ namespace KindBee.DB.DAL
     {
         KindBeeDBContext context;
         public PositionDAL(KindBeeDBContext kindBeeDBContext) {
-            context = kindBeeDBContext;
+            context = KindBeeDBContext.GetContext();
         }
+
         public void Add(Position item)
         {
             context.Positions.Add(item);
@@ -22,19 +23,28 @@ namespace KindBee.DB.DAL
             var t = Get(id);
             if (t != null)
             {
-                context.Positions.Remove(t);
-                context.SaveChanges();
+                try
+                {
+                    context.Positions.Remove(t);
+                    context.SaveChanges();
+                }
+                catch(Exception ex)
+                {
+                    var t1 = ex;
+                }
             }
             return t;
         }
 
         public IEnumerable<Position> Get()
         {
-            return context.Positions.AsNoTracking().ToList();
+            //return context.Positions.AsNoTracking().ToList();
+            return context.Positions.ToList();
         }
 
         public Position Get(int id)
         {
+            //return context.Positions.AsNoTracking<Position>().Where(t => t.Id == id).First();
             return context.Positions.AsNoTracking<Position>().Where(t => t.Id == id).First();
         }
 
