@@ -83,12 +83,13 @@ namespace KindBee.Controllers
                         position.Quantity--;
                         if (position.Quantity == 0)
                         {
-                            positionDAL.Delete(position.Id);
+                            //positionDAL.Delete(position.Id);
+                            _kindBeeDBContext.Positions.Remove(position);
                             //добавляем на склад
-                                                        try
+                            try
                             {
                                 //_kindBeeDBContext.Entry(product).State = EntityState.Modified; // added row
-                                product.Quantity++;
+                                position.Product.Quantity++;
                                 _kindBeeDBContext.SaveChanges();
 
 
@@ -103,8 +104,14 @@ namespace KindBee.Controllers
                     }
                     //добавляем на склад
                     product.Quantity++;
-
-                    _kindBeeDBContext.SaveChanges();
+                    try
+                    {
+                        _kindBeeDBContext.SaveChanges();
+                    }
+                    catch (Exception ex)
+                    {
+                        var tr = ex;
+                    }
                     return StatusCodes.Status200OK;
                 }
                 return StatusCodes.Status203NonAuthoritative;

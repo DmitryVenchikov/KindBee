@@ -30,7 +30,7 @@ namespace KindBee.DB
         {
             //if (!optionsBuilder.IsConfigured)
             //{
-                optionsBuilder.UseLazyLoadingProxies().UseSqlServer("Data Source=DESKTOP-V22KSA0\\MSSQLSERVER01;Initial Catalog=KindBee;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
+                optionsBuilder.UseLazyLoadingProxies().UseSqlServer("Data Source=DESKTOP-VHEI76T;Initial Catalog=KindBee;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
             //}
         }
 
