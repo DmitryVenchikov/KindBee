@@ -1,7 +1,7 @@
 ﻿@{
     ViewData["Title"] = "Мои заказы";
 }
-@model KindBee.DB.DBModels.Basket;
+@model List<KindBee.DB.DBModels.Position>;
 
 <head>
     <link rel="stylesheet" href="~/css/groceryShowcase.css" />
@@ -10,9 +10,9 @@
 
 </head>
 <div class="text-center">
-    @if (Model.Positions == null)
+    @if (Model == null || Model.Count==0)
     {
-        <h2>Ваша корзина пуста</h2>
+        <h2>У Вас нет актуальных заказов</h2>
     }
     else
     {
@@ -28,7 +28,7 @@
                 </tr>
             </thead>
             <tbody id="tableBody">
-                @foreach (var item in Model.Positions)
+                @foreach (var item in Model)
                 {
                     <tr>
                         <td>@item.Product.Name</td>
@@ -42,12 +42,9 @@
                     </tr>
 
                 }
-                <tr><td>Итого - <p class="totalSum" name="totalSum" id="totalSum"> @Model.TotalSum</p>рублей</td></tr>
             </tbody>
         </table>
-        <button class="delete" onclick="ReCountTotalSum()">тест</button>
-        <button class="delete" onclick="DeleteAllPositions()">Очистить корзину</button>
-        <a href="@Url.Action("Init", "Order")">Оформить заказ</a>
+
     }
 
 

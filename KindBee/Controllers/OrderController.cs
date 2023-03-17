@@ -4,7 +4,9 @@ using KindBee.DB.DBModels;
 using KindBee.DB.Interfaces;
 using KindBee.Models;
 using Microsoft.AspNetCore.Mvc;
+using SendLib;
 using System.Diagnostics;
+using System.Text;
 
 namespace KindBee.Controllers
 {
@@ -20,7 +22,7 @@ namespace KindBee.Controllers
         static IDataAccess<Product> productDAL;
         static KindBeeDBContext _kindBeeDBContext;
 
-        public IActionResult Init()
+        public async Task<IActionResult> Init()
         {
             int id;
             if (int.TryParse(HttpContext.User.Claims.ToList().First().Value, out id))
@@ -33,19 +35,40 @@ namespace KindBee.Controllers
                     _kindBeeDBContext.SaveChanges();
 
                     var orderId = dal.Get().ToList().Last().Id;
-                    //for(int i=0; i< customer.Basket.Positions.Count(); i++)
-                    //{
-                        
-                    //}
+
+                    //отправляем данные о заказе и сохраняем их
+                    StringBuilder body = new StringBuilder();
+                    body.AppendLine($"Новый заказ от клиента: \n" +
+                    $"имя клиента {customer.Name}\n" +
+                    $"фамилия клиента {customer.Lastname}\n" +
+                    $"отчество клиента {customer.Middlename}\n\n");
+
                     foreach (var p in customer.Basket.Positions)
                     {
                         p.OrderId = orderId;
+                  
+                        body.AppendLine(
+                        " id: " + p.ProductId.ToString() +
+                        "\tназвание продукта: " + p.Product.Name.ToString() +
+                        "\tописание продукта: " + p.Product.Description.ToString() +
+                        "\tколичество" + p.Quantity.ToString()
+                        );
                     }
+                    var positions = customer.Basket.Positions;
+                    customer.Basket = new Basket();
+                    //customer.Basket.Positions = new List<Position>();
+                    try
+                    {
+                        _kindBeeDBContext.SaveChanges();
+                    }
+                    catch (Exception ex)
+                    {
+                        //log it
+                        int t = 0;
+                    }
+                    await Sender.SendEmailAsync("venchikovdmitri@mail.ru", "Новый заказ от интернет магазина KindBee", body.ToString());
 
-                    customer.Basket.Positions = new List<Position>();
-                    _kindBeeDBContext.SaveChanges();
-
-                    return RedirectToAction("Index", "Home");
+                    return View(positions);
                 }
                 return RedirectToAction("Error", "Home");
             }
