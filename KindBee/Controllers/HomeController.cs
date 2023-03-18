@@ -59,9 +59,9 @@ namespace KindBee.Controllers
                     }
                     return View(productsOnMain);
                 }
-                return RedirectToAction("Error", "Home");
+                return RedirectToAction("Login", "Account");
             }
-            return RedirectToAction("Error", "Home");
+            return RedirectToAction("Login", "Account");
         }
         //проверить на коллизии запросов к базе
         [HttpPost]

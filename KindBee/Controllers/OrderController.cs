@@ -1,4 +1,5 @@
-﻿using KindBee.DB;
+﻿using Castle.Core.Resource;
+using KindBee.DB;
 using KindBee.DB.DAL;
 using KindBee.DB.DBModels;
 using KindBee.DB.Interfaces;
@@ -27,48 +28,78 @@ namespace KindBee.Controllers
             int id;
             if (int.TryParse(HttpContext.User.Claims.ToList().First().Value, out id))
             {
-                var customer = customerDAL.Get(id);
+                var customer = _kindBeeDBContext.Customers.Find(id);
                 if (customer != null) //если такой клиент существует
                 {
-                    var order = new Order() { Customer = customer, DateOfRegistration = DateTime.Now };
-                    dal.Add(order);
-                    _kindBeeDBContext.SaveChanges();
-
-                    var orderId = dal.Get().ToList().Last().Id;
-
-                    //отправляем данные о заказе и сохраняем их
-                    StringBuilder body = new StringBuilder();
-                    body.AppendLine($"Новый заказ от клиента: \n" +
-                    $"имя клиента {customer.Name}\n" +
-                    $"фамилия клиента {customer.Lastname}\n" +
-                    $"отчество клиента {customer.Middlename}\n\n");
-
-                    foreach (var p in customer.Basket.Positions)
-                    {
-                        p.OrderId = orderId;
-                  
-                        body.AppendLine(
-                        " id: " + p.ProductId.ToString() +
-                        "\tназвание продукта: " + p.Product.Name.ToString() +
-                        "\tописание продукта: " + p.Product.Description.ToString() +
-                        "\tколичество" + p.Quantity.ToString()
-                        );
-                    }
                     var positions = customer.Basket.Positions;
-                    customer.Basket = new Basket();
-                    //customer.Basket.Positions = new List<Position>();
-                    try
+                    var listOfOrders = new List<Order>();
+                
+                    if (customer.Basket.Positions.Count != 0)
                     {
+                        var order = new Order() { Customer = customer, DateOfRegistration = DateTime.Now };
+                      
+                        order.Status = Status.NEW;
+                        
                         _kindBeeDBContext.SaveChanges();
-                    }
-                    catch (Exception ex)
-                    {
-                        //log it
-                        int t = 0;
-                    }
-                    await Sender.SendEmailAsync("venchikovdmitri@mail.ru", "Новый заказ от интернет магазина KindBee", body.ToString());
 
-                    return View(positions);
+                        var orderId = dal.Get().ToList().Last().Id;
+
+                        //отправляем данные о заказе и сохраняем их
+                        StringBuilder body = new StringBuilder();
+                        body.AppendLine(
+                        $"<h1>Новый заказ от клиента:</h1>" +
+                        $"<h5>Id заказа {orderId}</h5>" +
+                        $"<h2>Имя клиента: {customer.Name}</h2>" +
+                        $"<h2>Фамилия клиента: {customer.Lastname}</h2>");
+                        if (!string.IsNullOrWhiteSpace(customer.Middlename))
+                        {
+                            body.AppendLine($"<h2>Отчество клиента: {customer.Middlename}</h2>");
+                        }
+                        body.AppendLine("<br>");
+                        decimal totalSum = 0;
+                        
+
+
+                        for (int i =0; i< customer.Basket.Positions.Count; i++)
+                        {
+                            var p = customer.Basket.Positions.ToArray()[i];
+                       
+                            
+                            p.Order = order;
+                            order.Positions.Add(p);
+                            totalSum = (decimal)(totalSum + p.Quantity * p.Product.Price);
+                            body.AppendLine(
+                            $"<h3>Id продукта в БД: {p.ProductId.ToString()}</h3>" +
+                            $"<h3>Название продукта: {p.Product.Name.ToString()}</h3>" +
+                            $"<h3>Описание продукта: {p.Product.Description.ToString()}</h3>" +
+                            $"<h3>Количество: {p.Quantity.ToString()}</h3>" +
+                            $"<h3>Цена позиции: {p.Quantity * p.Product.Price}</h3><br>"
+                            );
+                        }
+
+                           
+                        body.AppendLine($"<h3>Итого: {totalSum}");
+                        body.AppendLine($"<br><br><h4>C уважением, администрация сайта</h4>");
+                        //customer.Basket.Positions.Clear();
+
+                        _kindBeeDBContext.Orders.Add(order);
+                        //customer.Basket.Positions = new List<Position>();
+                        try
+                        {
+                            _kindBeeDBContext.SaveChanges();
+                        }
+                        catch (Exception ex)
+                        {
+                            //log it
+                            int t = 0;
+                        }
+                        listOfOrders.Add(order);
+                        //добавляем остальные заказы клиента
+
+                        int grt = 0;
+                        //await Sender.SendEmailAsync("venchikovdmitri@mail.ru", "Новый заказ от интернет магазина KindBee", body.ToString());
+                    }
+                    return View(customer.Orders.ToList());
                 }
                 return RedirectToAction("Error", "Home");
             }

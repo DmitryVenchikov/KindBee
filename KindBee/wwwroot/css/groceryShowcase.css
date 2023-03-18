@@ -20,11 +20,16 @@
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
+    width: 23%;
+    min-height: 5%;
+    min-width: 5%;
+    max-height: 15%;
+    max-width: 20%;
 }
 
 .product-image {
-    width: 200px;
-    height: 200px;
+    min-width: 150px;
+    min-height: 150px;
     margin-bottom: 10px;
 }
 
@@ -41,9 +46,13 @@
 }
 
 .product-quantity {
-    display: flex;
     align-items: center;
-    margin-bottom: 10px;
+    margin-bottom: 1%;
+    vertical-align: bottom;
+    display: inline-block;
+
+     align-items: flex-end;
+  flex: 1 0 auto;
 }
 
 .plus-btn, .minus-btn {

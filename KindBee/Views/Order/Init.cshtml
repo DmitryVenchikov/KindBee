@@ -1,7 +1,7 @@
 ﻿@{
     ViewData["Title"] = "Мои заказы";
 }
-@model List<KindBee.DB.DBModels.Position>;
+@model List<KindBee.DB.DBModels.Order>;
 
 <head>
     <link rel="stylesheet" href="~/css/groceryShowcase.css" />
@@ -23,24 +23,46 @@
                     <th>Наименование продукта</th>
                     <th>Цена за 1 шт.</th>
                     <th>Количество</th>
-                    <th></th>
+ 
                     <th></th>
                 </tr>
             </thead>
             <tbody id="tableBody">
-                @foreach (var item in Model)
+                @foreach (var order in Model)
                 {
-                    <tr>
-                        <td>@item.Product.Name</td>
-                        <td name="price">@item.Product.Price</td>
-                        <td name="quantity">@item.Quantity</td>
-                        <td name="m">
-                            <button onclick="AddOneProductInBasket(@item.Product.Id, this)" type="submit" class="plus-btn">+</button>
-                            <button onclick="DeleteOneProductFromBasket(@item.Product.Id, this)" type="submit" class="minus-btn">-</button>
-                            <button class="delete" onclick="DeletePositionFromBasket(@item.Product.Id, this)">Удалить этот продукт</button>
-                        </td>
-                    </tr>
+                  
+                    @if (order.Status==KindBee.DB.DBModels.Status.NEW)
+                    {
+                        <tr><td>Ваш заказ принят. Ждите ответного звонка</td></tr>
+                    }
+                    @if (order.Status==KindBee.DB.DBModels.Status.REJECTED)
+                    {
+                        <tr><td>К сожалению, мы не можем принять этот заказ в связи с нехваткой продукта</td></tr>
+                    }
+                    @if (order.Status==KindBee.DB.DBModels.Status.CANCELED)
+                    {
+                        <tr><td>Вы отменили данный заказ</td></tr>
+                    }
+                    @if (order.Status==KindBee.DB.DBModels.Status.PAID)
+                    {
+                        <tr><td>Заказ оплачен</td></tr>
+                    }
+                     @if (order.Status==KindBee.DB.DBModels.Status.DELIVERED)
+                    {
+                        <tr><td>Заказ доставлен</td></tr>
+                    }
+                    @foreach (var position in order.Positions)
+                    {
 
+                        <tr>
+                            <td>@position.Product.Name</td>
+                            <td name="price">@position.Product.Price</td>
+                            <td name="quantity">@position.Quantity</td>
+                           
+                    </tr>
+                    }
+                    <tr><td></td></tr>
+                    <tr><td></td></tr>
                 }
             </tbody>
         </table>
