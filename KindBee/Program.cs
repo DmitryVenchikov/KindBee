@@ -1,21 +1,21 @@
-using KindBee.DB;
-using KindBee.DB.DAL;
-using KindBee.DB.Interfaces;
+
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+using System.Text.Json.Serialization;
+using KindBee.DB;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
+builder.Services.AddControllersWithViews().AddJsonOptions(x =>
+                x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles).AddJsonOptions(x =>
+   x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve);
 
+//builder.Services.AddControllersWithViews();
 
-builder.Services.AddControllersWithViews();
-
-
-builder.Services.AddControllers();
-builder.Services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options =>
@@ -23,13 +23,15 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
                     options.LoginPath = new Microsoft.AspNetCore.Http.PathString("/Account/Login");
                     options.AccessDeniedPath = new Microsoft.AspNetCore.Http.PathString("/Account/Login");
                 });
-builder.Services.AddHttpContextAccessor();
-builder.Services.AddDbContext<KindBeeDBContext>(options => options.UseSqlServer(builder.Configuration["DefaultConnection"]));
 
-//builder.Services.AddTransient<IDataAccess, >();
+builder.Services.AddControllersWithViews();
+builder.Services.AddDbContext<KindBeeDBContext>(options => options.UseSqlServer(builder.Configuration["DefaultConnection"], b => b.MigrationsAssembly("DOKINWebApplicationMVC")));
+builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
+
+//builder.Services.AddDbContext<DokinDbContext>();
+//builder.Services.AddTransient<IDataAccessCar, CarsDAL>();
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession();
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -42,15 +44,15 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
+app.UseSession();
 app.UseRouting();
 
 app.UseAuthentication();
-app.UseAuthorization();   // добавление middleware авторизации 
-//app.UseMiddleware<MiddleWare>();
+//app.UseMvc();
+app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
