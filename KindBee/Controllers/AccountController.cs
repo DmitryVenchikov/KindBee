@@ -54,8 +54,6 @@ namespace KindBee.Controllers
             return View();
         }
 
-       
-
         [HttpPost]
         public async Task<IActionResult> Register(CustomerRegisterVM model)
         {
@@ -95,6 +93,7 @@ namespace KindBee.Controllers
             }
             return View(model);
         }
+        
         [HttpGet]
         public IActionResult Login()
         {
