@@ -7,7 +7,7 @@ namespace KindBee.DB.DAL
 {
     public class CustomerDAL : IDataAccess<Customer>
     {
-        static KindBeeDBContext context;
+        public  KindBeeDBContext context { get; set; }
         public CustomerDAL(KindBeeDBContext kindBeeDBContext) {
             context = kindBeeDBContext;
         }

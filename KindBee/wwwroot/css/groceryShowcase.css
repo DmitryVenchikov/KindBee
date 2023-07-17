@@ -133,7 +133,7 @@
 }
 
 .plus-btn:hover, .minus-btn:hover {
-    background-color: #009900;
+    background-color: greenyellow;
 }
 
 .add-to-cart-btn:hover {
@@ -143,7 +143,7 @@
 
 /*анимация*/
 button:hover {
-    color: #FF0000;
+    color: black;
     background-color: #00FF00;
     transition: all 0.5s ease;
 }

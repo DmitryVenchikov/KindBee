@@ -21,15 +21,14 @@ namespace KindBee.Controllers
         static IDataAccess<Product> productDAL;
         static KindBeeDBContext _kindBeeDBContext;
 
-        public BasketController(ILogger<BasketController> logger)
+        public BasketController(ILogger<BasketController> logger, KindBeeDBContext db)
         {
             _logger = logger;
-            _kindBeeDBContext = KindBeeDBContext.GetContext();
+            _kindBeeDBContext = db;
             basketDAL = new BasketDAL(_kindBeeDBContext);
             customerDAL = new CustomerDAL(_kindBeeDBContext);
             positionDAL = new PositionDAL(_kindBeeDBContext);
             productDAL = new ProductDAL(_kindBeeDBContext);
-
         }
 
         [Authorize(Roles = "customer")]
@@ -56,21 +55,21 @@ namespace KindBee.Controllers
         }
 
 
-
         [HttpPost]
-        //[Authorize(Roles = "customer")]
+        [Authorize(Roles = "customer")]
         public int DeleteOneProductFromBasket(int id)
         {
             int userId;
 
             if (int.TryParse(HttpContext.User.Claims.ToList().First().Value, out userId))
             {
-                customerDAL = new CustomerDAL(_kindBeeDBContext);
-                // var customer = customerDAL.Get(userId);
-                var customer = _kindBeeDBContext.Customers.Find(userId);
-                    if (customer != null) //если такой клиент существует
+                //customerDAL = new CustomerDAL(_kindBeeDBContext);
+                var customer = customerDAL.Get(userId);
+                //var customer = _kindBeeDBContext.Customers.Find(userId);
+                if (customer != null) //если такой клиент существует
                 {
-                    var product = _kindBeeDBContext.Products.Find(id);
+                    //var product = _kindBeeDBContext.Products.Find(id);
+                    var product = customer.Basket.Positions.First(t => t.ProductId == id).Product;
                     if (customer.Basket.Positions.Where(t => t.Product.Id == id).Count() <= 0)//если такой продукт не существует в корзине клиента
                     {
                         //по идее невозможный случай
@@ -81,38 +80,24 @@ namespace KindBee.Controllers
                         var position = customer.Basket.Positions.Where(t => t.Product.Id == id).
                             First();
                         position.Quantity--;
+                        //добавляем на склад
+                        position.Product.Quantity++;
+                        try
+                        {
+                            //_kindBeeDBContext.SaveChanges();
+                            customerDAL.context.SaveChanges();
+                        }
+                        catch (Exception ex)
+                        {
+                            var tr = ex;
+                        }
+
                         if (position.Quantity == 0)
                         {
-                            //positionDAL.Delete(position.Id);
-                            _kindBeeDBContext.Positions.Remove(position);
-                            //добавляем на склад
-                            try
-                            {
-                                //_kindBeeDBContext.Entry(product).State = EntityState.Modified; // added row
-                                position.Product.Quantity++;
-                                _kindBeeDBContext.SaveChanges();
-
-
-                            }
-                            catch (Exception ex)
-                            {
-                                var tr = ex;
-                            }
-
-                            return StatusCodes.Status204NoContent;
+                            positionDAL.Delete(position.Id);
                         }
                     }
-                    //добавляем на склад
-                    product.Quantity++;
-                    try
-                    {
-                        _kindBeeDBContext.SaveChanges();
-                    }
-                    catch (Exception ex)
-                    {
-                        var tr = ex;
-                    }
-                    return StatusCodes.Status200OK;
+                     return StatusCodes.Status200OK;
                 }
                 return StatusCodes.Status203NonAuthoritative;
             }
@@ -121,14 +106,16 @@ namespace KindBee.Controllers
 
 
         [HttpPost]
-        //[Authorize(Roles = "customer")]
+        [Authorize(Roles = "customer")]
         public int AddOneProductInBasket(int id)
         {
             int userId;
 
             if (int.TryParse(HttpContext.User.Claims.ToList().First().Value, out userId))
             {
+                // var customer = context.Customers.Include(t => t.Basket).First(i=>i.Id==userId);
                 var customer = customerDAL.Get(userId);
+
                 if (customer != null) //если такой клиент существует
                 {
                     var product = productDAL.Get(id);
@@ -138,44 +125,27 @@ namespace KindBee.Controllers
                     }
                     if (customer.Basket.Positions.Where(t => t.Product.Id == id).Count() == 0)//если такой продукт не существует в корзине клиента
                     {
-                        var position = new Position { Product = product, Quantity = 1 };
+                        var position = new Position { Product = product, Quantity = 1, Basket = customer.Basket };
                         customer.Basket.Positions.Add(position);
+                        //_kindBeeDBContext.Positions.Add(position);
                     }
                     else
                     {
-                        customer.Basket.Positions.Where(t => t.Product.Id == id).
-                            First().Quantity++;
+                        customer.Basket.Positions.Where(t => t.Product.Id == id).First().Quantity++;
                     }
+
                     //вычитаем из остатка склада
                     product.Quantity--;
-
-                    _kindBeeDBContext.SaveChanges();
+                    productDAL.context.SaveChanges();
+                    customerDAL.context.SaveChanges();
 
                     return StatusCodes.Status200OK;
                 }
+
                 return StatusCodes.Status203NonAuthoritative;
             }
             return StatusCodes.Status203NonAuthoritative;
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         [HttpPost]
         public int DeleteAllPositions()

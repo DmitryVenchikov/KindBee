@@ -2,12 +2,11 @@
 {
     public enum Status
     {
-        NEW, 
-        
-        PAID,
+        NEW, //новый
+        PAID,  //оплачен
         REJECTED,  //отклонен сайтом
         CANCELED,  //отменен клиентом
-        DELIVERED
+        DELIVERED //доставлен
     }
 
     public class Order

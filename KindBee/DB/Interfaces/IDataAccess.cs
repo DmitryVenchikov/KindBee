@@ -7,5 +7,7 @@
         void Add(T item);
         void Update(T item);
         T Delete(int id);
+       // void RemoveAll();
+        public KindBeeDBContext context { get; set; }
     }
 }

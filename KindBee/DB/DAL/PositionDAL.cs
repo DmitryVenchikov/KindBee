@@ -7,7 +7,7 @@ namespace KindBee.DB.DAL
 {
     public class PositionDAL : IDataAccess<Position>
     {
-        KindBeeDBContext context;
+        public KindBeeDBContext context { get; set; }
         public PositionDAL(KindBeeDBContext kindBeeDBContext) {
             context = KindBeeDBContext.GetContext();
         }

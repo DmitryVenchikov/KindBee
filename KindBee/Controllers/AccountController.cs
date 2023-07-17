@@ -61,13 +61,12 @@ namespace KindBee.Controllers
             {
                 model.Middlename = "";
             }
-            if (ModelState.IsValid)
-            {
+            //if (ModelState.IsValid)
+            //{
                 var user = dal.Get().FirstOrDefault(u => u.Login == model.Login);
                 if (user == null)
                 {
                     // добавляем пользователя в бд
-                 
                     user = new Customer()
                     {
                         Name = model.Name,
@@ -90,7 +89,7 @@ namespace KindBee.Controllers
                 }
                 else
                     ModelState.AddModelError("", "Пользователь с таким логином уже существует");
-            }
+            //}
             return View(model);
         }
         
@@ -121,7 +120,7 @@ namespace KindBee.Controllers
                 if (user != null)
                 {
                     await Authenticate(user); // аутентификация
-                   
+                    
                     return RedirectToAction("Index", "Home");
                 }
                 ModelState.AddModelError("", "Некорректные логин и(или) пароль");
@@ -157,7 +156,6 @@ namespace KindBee.Controllers
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction("Index", "Home");
         }
-
 
     }
 }

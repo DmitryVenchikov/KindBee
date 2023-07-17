@@ -7,7 +7,7 @@ namespace KindBee.DB.DAL
 {
     public class OrderDAL : IDataAccess<Order>
     {
-        KindBeeDBContext context;
+        public KindBeeDBContext context { get; set; }
         public OrderDAL(KindBeeDBContext kindBeeDBContext) {
             context = kindBeeDBContext;
         }

@@ -6,7 +6,7 @@ namespace KindBee.DB.DAL
 {
     public class BasketDAL : IDataAccess<Basket>
     {
-        KindBeeDBContext context;
+        public KindBeeDBContext context { get; set; }
         public BasketDAL(KindBeeDBContext kindBeeDBContext) {
             context = kindBeeDBContext;
         }
@@ -44,5 +44,6 @@ namespace KindBee.DB.DAL
             context.Baskets.Update(item);
             context.SaveChanges();
         }
+
     }
 }

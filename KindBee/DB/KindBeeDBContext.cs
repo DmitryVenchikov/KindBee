@@ -40,7 +40,11 @@ namespace KindBee.DB
             //{
             //    instance.Dispose();
             //}
-            instance = new KindBeeDBContext();
+            //if (instance == null)
+            //{
+                instance = new KindBeeDBContext();
+            //}
+
             return instance;
         }
     }

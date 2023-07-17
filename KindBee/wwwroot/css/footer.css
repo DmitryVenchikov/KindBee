@@ -1,6 +1,6 @@
 .myFooter {
-    padding-top: 3%;
-    padding-bottom: 3%;
+    padding-top: 1.5%;
+    padding-bottom: 1.5%;
     padding-left: 0px;
     padding-right: 0px;
     width: 100%;
@@ -15,6 +15,7 @@
 
 .footerElementTitle {
     display: block;
+    font-size: 20px;
 }
 
 .footerElement {
@@ -22,13 +23,11 @@
 }
 
 footer {
-    background-color: #BF8F30;
+    background-color: lawngreen;
     margin: 0px;
     padding: 0px;
-
     left: 0;
     bottom: 0;
     width: 100%;
-
     flex-shrink: 0;
 }

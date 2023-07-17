@@ -1,6 +1,6 @@
 ﻿@model KindBee.Models.CustomerRegisterVM
 @{
-    ViewData["Title"] = "Регистрация";
+    ViewData["Title"] = "";
 }
 <head>
     <link rel="stylesheet" href="~/css/Login.css" />
@@ -14,7 +14,7 @@
     <input type="text" asp-for="Name" placeholder="Введите имя"/>
             <label><span asp-validation-for="Name" /></label>
     </div>
-    <div class="user-box">
+@*    <div class="user-box">
     <input type="text" asp-for="Middlename" placeholder="Введите отчество"/>
             <label><span asp-validation-for="Middlename" /></label>
     </div>
@@ -22,7 +22,7 @@
    <div class="user-box">
     <input type="text" asp-for="Lastname" placeholder="Введите фамилию"/>
             <label><span asp-validation-for="Lastname" /></label>
-    </div>
+    </div>*@
 
      <div class="user-box">
     <input type="text" asp-for="PhoneNumber" placeholder="Введите номер телефона"/>
@@ -50,11 +50,9 @@
 </div>
 
 @section scripts{
-
     <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
     <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
 }
 
-
-
+ 
 

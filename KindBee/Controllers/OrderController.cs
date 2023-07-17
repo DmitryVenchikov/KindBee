@@ -15,7 +15,7 @@ namespace KindBee.Controllers
     {
         private readonly ILogger<OrderController> _logger;
 
-        static IDataAccess<Order> dal;
+        static IDataAccess<Order> orderDAL;
 
         static IDataAccess<Basket> basketDAL;
         static IDataAccess<Customer> customerDAL;
@@ -23,27 +23,43 @@ namespace KindBee.Controllers
         static IDataAccess<Product> productDAL;
         static KindBeeDBContext _kindBeeDBContext;
 
+       
+
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult Error()
+        {
+            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        public OrderController(ILogger<OrderController> logger, KindBeeDBContext dBContext)
+        {
+            _logger = logger;
+            _kindBeeDBContext = dBContext;
+            orderDAL = new OrderDAL(_kindBeeDBContext);
+            basketDAL = new BasketDAL(_kindBeeDBContext);
+            customerDAL = new CustomerDAL(_kindBeeDBContext);
+            positionDAL = new PositionDAL(_kindBeeDBContext);
+            productDAL = new ProductDAL(_kindBeeDBContext);
+        }
         public async Task<IActionResult> Init()
         {
             int id;
             if (int.TryParse(HttpContext.User.Claims.ToList().First().Value, out id))
             {
-                var customer = _kindBeeDBContext.Customers.Find(id);
+                var customer = customerDAL.Get(id);
                 if (customer != null) //если такой клиент существует
                 {
                     var positions = customer.Basket.Positions;
-                    var listOfOrders = new List<Order>();
-                
+
                     if (customer.Basket.Positions.Count != 0)
                     {
                         var order = new Order() { Customer = customer, DateOfRegistration = DateTime.Now };
-                      
+
                         order.Status = Status.NEW;
-                        
-                        _kindBeeDBContext.SaveChanges();
-
-                        var orderId = dal.Get().ToList().Last().Id;
-
+                       
+                        order = customer.Orders.ToList().Last();
+                        var orderId = order.Id;
+                       
                         //отправляем данные о заказе и сохраняем их
                         StringBuilder body = new StringBuilder();
                         body.AppendLine(
@@ -57,46 +73,50 @@ namespace KindBee.Controllers
                         }
                         body.AppendLine("<br>");
                         decimal totalSum = 0;
-                        
 
-
-                        for (int i =0; i< customer.Basket.Positions.Count; i++)
+                        var idsPositionsList = customer.Basket.Positions.Select(t => t.Id).ToArray();
+                        foreach(var positionId in idsPositionsList)
                         {
-                            var p = customer.Basket.Positions.ToArray()[i];
-                       
+                            var position = customer.Basket.Positions.First(t => t.Id == positionId);
+                            position.Order = order;
+                            position.OrderId = orderId;
+                            position.BasketId = null;
+                            order.Positions.Add(position);
                             
-                            p.Order = order;
-                            order.Positions.Add(p);
-                            totalSum = (decimal)(totalSum + p.Quantity * p.Product.Price);
+                            totalSum = (decimal)(totalSum + position.Quantity * position.Product.Price);
                             body.AppendLine(
-                            $"<h3>Id продукта в БД: {p.ProductId.ToString()}</h3>" +
-                            $"<h3>Название продукта: {p.Product.Name.ToString()}</h3>" +
-                            $"<h3>Описание продукта: {p.Product.Description.ToString()}</h3>" +
-                            $"<h3>Количество: {p.Quantity.ToString()}</h3>" +
-                            $"<h3>Цена позиции: {p.Quantity * p.Product.Price}</h3><br>"
+                            $"<h3>Id продукта в БД: {position.ProductId.ToString()}</h3>" +
+                            $"<h3>Название продукта: {position.Product.Name.ToString()}</h3>" +
+                            $"<h3>Описание продукта: {position.Product.Description.ToString()}</h3>" +
+                            $"<h3>Количество: {position.Quantity.ToString()}</h3>" +
+                            $"<h3>Цена позиции: {position.Quantity * position.Product.Price}</h3><br>"
                             );
+                            if(position.Quantity==0)
+                            {
+                                
+                            }
+                            customerDAL.context.Positions.Update(position);
+
+                  
                         }
 
-                           
                         body.AppendLine($"<h3>Итого: {totalSum}");
                         body.AppendLine($"<br><br><h4>C уважением, администрация сайта</h4>");
-                        //customer.Basket.Positions.Clear();
-
-                        _kindBeeDBContext.Orders.Add(order);
+                        //удаляем позиции из корзины
                         //customer.Basket.Positions = new List<Position>();
+                        customer.Orders.Add(order);
+
                         try
                         {
-                            _kindBeeDBContext.SaveChanges();
+                            customerDAL.context.SaveChanges();
                         }
                         catch (Exception ex)
                         {
                             //log it
                             int t = 0;
                         }
-                        listOfOrders.Add(order);
                         //добавляем остальные заказы клиента
-
-                        int grt = 0;
+ 
                         //await Sender.SendEmailAsync("venchikovdmitri@mail.ru", "Новый заказ от интернет магазина KindBee", body.ToString());
                     }
                     return View(customer.Orders.ToList());
@@ -106,33 +126,26 @@ namespace KindBee.Controllers
             return RedirectToAction("Error", "Home");
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
 
-        public OrderController(ILogger<OrderController> logger)
-        {
-            _logger = logger;
-            _kindBeeDBContext = KindBeeDBContext.GetContext();
-            dal = new OrderDAL(_kindBeeDBContext);
-            basketDAL = new BasketDAL(_kindBeeDBContext);
-            customerDAL = new CustomerDAL(_kindBeeDBContext);
-            positionDAL = new PositionDAL(_kindBeeDBContext);
-            productDAL = new ProductDAL(_kindBeeDBContext);
-        }
+
+
+
+
+
+
+
+
 
         [HttpGet(Name = "GetAllItems")]
         public IEnumerable<Order> Get()
         {
-            return dal.Get();
+            return orderDAL.Get();
         }
 
         [HttpGet("{id}", Name = "GetOrder")]
         public IActionResult Get(int Id)
         {
-            Order Order = dal.Get(Id);
+            Order Order = orderDAL.Get(Id);
 
             if (Order == null)
             {
@@ -149,7 +162,7 @@ namespace KindBee.Controllers
             {
                 return BadRequest();
             }
-            dal.Add(Order);
+            orderDAL.Add(Order);
             return CreatedAtRoute("GetOrder", new { id = Order.Id }, Order);
         }
 
@@ -161,20 +174,20 @@ namespace KindBee.Controllers
                 return BadRequest();
             }
 
-            var Order = dal.Get(Id);
+            var Order = orderDAL.Get(Id);
             if (Order == null)
             {
                 return NotFound();
             }
 
-            dal.Update(updatedOrder);
+            orderDAL.Update(updatedOrder);
             return RedirectToRoute("GetAllItems");
         }
 
         [HttpDelete("{id}")]
         public IActionResult Delete(int Id)
         {
-            var deletedOrder = dal.Delete(Id);
+            var deletedOrder = orderDAL.Delete(Id);
 
             if (deletedOrder == null)
             {

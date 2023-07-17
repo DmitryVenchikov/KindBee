@@ -8,7 +8,7 @@ namespace KindBee.Models
         [Required(ErrorMessage = "Не указано имя")]
         public string Name { get; set; }
         public string? Middlename { get; set; }
-        [Required(ErrorMessage = "Не указана Фамилия")]
+ 
         public string Lastname { get; set; }
 
         [Required(ErrorMessage = "Не указан номер")]

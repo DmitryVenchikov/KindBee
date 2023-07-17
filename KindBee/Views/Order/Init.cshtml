@@ -30,7 +30,6 @@
             <tbody id="tableBody">
                 @foreach (var order in Model)
                 {
-                  
                     @if (order.Status==KindBee.DB.DBModels.Status.NEW)
                     {
                         <tr><td>Ваш заказ принят. Ждите ответного звонка</td></tr>
@@ -58,8 +57,7 @@
                             <td>@position.Product.Name</td>
                             <td name="price">@position.Product.Price</td>
                             <td name="quantity">@position.Quantity</td>
-                           
-                    </tr>
+                        </tr>
                     }
                     <tr><td></td></tr>
                     <tr><td></td></tr>

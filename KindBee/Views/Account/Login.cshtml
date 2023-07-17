@@ -1,33 +1,35 @@
 ﻿@model KindBee.Models.CustomerLoginVM
 @{
-    ViewData["Title"] = "Авторизация";
+    ViewData["Title"] = "";
 }
 <head>
     <link rel="stylesheet" href="~/css/Login.css" />
 </head>
 <div class="login-box">
-  <h2>Авторизация</h2>
-  <form asp-action="Login" asp-controller="Account" asp-anti-forgery="true">
+    <h2>Авторизация</h2>
+    <form asp-action="Login" asp-controller="Account" asp-anti-forgery="true">
         <div class="validation" asp-validation-summary="ModelOnly"> </div>
 
-    <div class="user-box">
-      <input type="text" asp-for="Login" placeholder="Введите логин" />
-      <label><span asp-validation-for="Login" /></label>
-    </div>
+        <div class="user-box">
+            <input type="text" asp-for="Login" placeholder="Введите логин" />
+            <label><span asp-validation-for="Login" /></label>
+        </div>
 
-    <div class="user-box">
-       <input type="text" asp-for="Password" placeholder="Введите пароль" />
-       <label><span asp-validation-for="Password" /></label>
-    </div>
+        <div class="user-box">
+            <input type="text" asp-for="Password" placeholder="Введите пароль" />
+            <label><span asp-validation-for="Password" /></label>
+        </div> 
+        <div class="user-box">
             <button type="submit" class="registerbtn">Войти</button>
-             <a asp-action="Register" asp-controller="Account">Создать аккаунт</a>
-  </form>
+            <a asp-action="Register" asp-controller="Account">Создать аккаунт</a>
+        </div>
+    </form>
 </div>
 
 @section scripts{
 
-        <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
-        <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
 }
 
 
