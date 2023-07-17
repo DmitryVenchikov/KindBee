@@ -16,55 +16,57 @@
     }
     else
     {
-
+        @foreach (var order in Model)
+        {
+            <h3>Заказ @order.Id от @order.DateOfRegistration</h3>
+                @if (order.Status == KindBee.DB.DBModels.Status.NEW)
+                {
+                    <h4>Статус заказа: принят. Ждите ответного звонка</h4>
+                }
+                @if (order.Status == KindBee.DB.DBModels.Status.REJECTED)
+                {
+                <h4>Статус заказа: отклонен. К сожалению, мы не можем принять этот заказ в связи с нехваткой продукта</h4>
+                }
+                @if (order.Status == KindBee.DB.DBModels.Status.CANCELED)
+                {
+                   <h4>Статус заказа: отменен. Вы отменили данный заказ</h4>
+                }
+                @if (order.Status == KindBee.DB.DBModels.Status.PAID)
+                {
+                <h4>Статус заказа: оплачен</h4>
+                }
+                @if (order.Status == KindBee.DB.DBModels.Status.DELIVERED)
+                {
+                <h4>Статус заказа: доставлен</h4>
+                }
+        
+             decimal? orderCommonSum = 0;
         <table class="table">
             <thead>
                 <tr>
                     <th>Наименование продукта</th>
                     <th>Цена за 1 шт.</th>
                     <th>Количество</th>
- 
                     <th></th>
                 </tr>
             </thead>
             <tbody id="tableBody">
-                @foreach (var order in Model)
-                {
-                    @if (order.Status==KindBee.DB.DBModels.Status.NEW)
-                    {
-                        <tr><td>Ваш заказ принят. Ждите ответного звонка</td></tr>
-                    }
-                    @if (order.Status==KindBee.DB.DBModels.Status.REJECTED)
-                    {
-                        <tr><td>К сожалению, мы не можем принять этот заказ в связи с нехваткой продукта</td></tr>
-                    }
-                    @if (order.Status==KindBee.DB.DBModels.Status.CANCELED)
-                    {
-                        <tr><td>Вы отменили данный заказ</td></tr>
-                    }
-                    @if (order.Status==KindBee.DB.DBModels.Status.PAID)
-                    {
-                        <tr><td>Заказ оплачен</td></tr>
-                    }
-                     @if (order.Status==KindBee.DB.DBModels.Status.DELIVERED)
-                    {
-                        <tr><td>Заказ доставлен</td></tr>
-                    }
                     @foreach (var position in order.Positions)
                     {
-
                         <tr>
                             <td>@position.Product.Name</td>
                             <td name="price">@position.Product.Price</td>
                             <td name="quantity">@position.Quantity</td>
+                            @{
+
+                                orderCommonSum = @orderCommonSum+@position.Product.Price* @position.Quantity;
+                            }
                         </tr>
                     }
-                    <tr><td></td></tr>
-                    <tr><td></td></tr>
-                }
             </tbody>
         </table>
-
+            <h3>Итого за заказ: @orderCommonSum</h3>
+        }
     }
 
 

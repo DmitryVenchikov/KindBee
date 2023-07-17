@@ -56,15 +56,15 @@ namespace KindBee.Controllers
                         var order = new Order() { Customer = customer, DateOfRegistration = DateTime.Now };
 
                         order.Status = Status.NEW;
-                       
+                        customer.Orders.Add(order);
+                        customerDAL.context.SaveChanges();
                         order = customer.Orders.ToList().Last();
-                        var orderId = order.Id;
-                       
+                      
                         //отправляем данные о заказе и сохраняем их
                         StringBuilder body = new StringBuilder();
                         body.AppendLine(
                         $"<h1>Новый заказ от клиента:</h1>" +
-                        $"<h5>Id заказа {orderId}</h5>" +
+                        $"<h5>Id заказа {order.Id}</h5>" +
                         $"<h2>Имя клиента: {customer.Name}</h2>" +
                         $"<h2>Фамилия клиента: {customer.Lastname}</h2>");
                         if (!string.IsNullOrWhiteSpace(customer.Middlename))
@@ -79,7 +79,7 @@ namespace KindBee.Controllers
                         {
                             var position = customer.Basket.Positions.First(t => t.Id == positionId);
                             position.Order = order;
-                            position.OrderId = orderId;
+                            position.OrderId = order.Id;
                             position.BasketId = null;
                             order.Positions.Add(position);
                             
@@ -96,15 +96,13 @@ namespace KindBee.Controllers
                                 
                             }
                             customerDAL.context.Positions.Update(position);
-
-                  
                         }
 
                         body.AppendLine($"<h3>Итого: {totalSum}");
                         body.AppendLine($"<br><br><h4>C уважением, администрация сайта</h4>");
                         //удаляем позиции из корзины
                         //customer.Basket.Positions = new List<Position>();
-                        customer.Orders.Add(order);
+                        customerDAL.context.Orders.Update(order);
 
                         try
                         {
