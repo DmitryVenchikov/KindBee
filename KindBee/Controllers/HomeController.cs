@@ -1,4 +1,5 @@
 ﻿using Azure;
+using Castle.Core.Resource;
 using KindBee.DB;
 using KindBee.DB.DAL;
 using KindBee.DB.DBModels;
@@ -40,10 +41,20 @@ namespace KindBee.Controllers
             productDAL = new ProductDAL(_kindBeeDBContext);
           
         }
-        [Authorize(Roles = "customer")]
+        //[Authorize(Roles = "customer")]
         public IActionResult Index()
         {
             int userId;
+            if(HttpContext.User.Claims ==null || HttpContext.User.Claims.Count()==0)
+            {
+                var productsOnMain = new List<ProductOnMain>();
+
+                foreach (var product in productDAL.Get())
+                {
+                    productsOnMain.Add(new ProductOnMain { QuantityInBasket = 0, Product = product });
+                }
+                return View(productsOnMain);
+            }
             if (int.TryParse(HttpContext.User.Claims.ToList().First().Value, out userId))
             {
                 var customer = customerDAL.Get(userId);
@@ -63,40 +74,40 @@ namespace KindBee.Controllers
             }
             return RedirectToAction("Login", "Account");
         }
-        //проверить на коллизии запросов к базе
-        [HttpPost]
+        ////проверить на коллизии запросов к базе
+        //[HttpPost]
         //[Authorize(Roles = "customer")]
-        public int AddProductInBasket(PurchasedProductVM purchasedProductVM)
-        {
-            int id;
+        //public int AddProductInBasket(PurchasedProductVM purchasedProductVM)
+        //{
+        //    int id;
 
-            if (int.TryParse(HttpContext.User.Claims.ToList().First().Value, out id))
-            {
-                var customer = customerDAL.Get(id);
-                if (customer != null) //если такой клиент существует
-                {
-                    var product = productDAL.Get(id);
-                    if (customer.Basket.Positions.Where(t => t.Product.Id == purchasedProductVM.Id).Count() == 0)//если такой продукт существует в корзине клиента
-                    {
-                        var position = new Position { Product = product, Quantity = purchasedProductVM.Quantity };
-                        customer.Basket.Positions.Add(position);
-                    }
-                    else
-                    {
-                        customer.Basket.Positions.Where(t => t.Product.Id == purchasedProductVM.Id).
-                            First().Quantity += purchasedProductVM.Quantity;
-                    }
-                    //вычитаем из остатка склада
-                    product.Quantity -= purchasedProductVM.Quantity;
+        //    if (int.TryParse(HttpContext.User.Claims.ToList().First().Value, out id))
+        //    {
+        //        var customer = customerDAL.Get(id);
+        //        if (customer != null) //если такой клиент существует
+        //        {
+        //            var product = productDAL.Get(id);
+        //            if (customer.Basket.Positions.Where(t => t.Product.Id == purchasedProductVM.Id).Count() == 0)//если такой продукт существует в корзине клиента
+        //            {
+        //                var position = new Position { Product = product, Quantity = purchasedProductVM.Quantity };
+        //                customer.Basket.Positions.Add(position);
+        //            }
+        //            else
+        //            {
+        //                customer.Basket.Positions.Where(t => t.Product.Id == purchasedProductVM.Id).
+        //                    First().Quantity += purchasedProductVM.Quantity;
+        //            }
+        //            //вычитаем из остатка склада
+        //            product.Quantity -= purchasedProductVM.Quantity;
 
-                    _kindBeeDBContext.SaveChanges();
+        //            _kindBeeDBContext.SaveChanges();
 
-                    return StatusCodes.Status200OK;
-                }
-                return StatusCodes.Status203NonAuthoritative;
-            }
-            return StatusCodes.Status203NonAuthoritative;
-        }
+        //            return StatusCodes.Status200OK;
+        //        }
+        //        return StatusCodes.Status203NonAuthoritative;
+        //    }
+        //    return StatusCodes.Status203NonAuthoritative;
+        //}
 
   
 

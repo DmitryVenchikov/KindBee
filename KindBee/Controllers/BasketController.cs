@@ -56,7 +56,7 @@ namespace KindBee.Controllers
 
 
         [HttpPost]
-        [Authorize(Roles = "customer")]
+        //[Authorize(Roles = "customer")]
         public int DeleteOneProductFromBasket(int id)
         {
             int userId;
@@ -99,18 +99,21 @@ namespace KindBee.Controllers
                     }
                      return StatusCodes.Status200OK;
                 }
-                return StatusCodes.Status203NonAuthoritative;
+                return StatusCodes.Status403Forbidden;
             }
-            return StatusCodes.Status203NonAuthoritative;
+            return StatusCodes.Status403Forbidden;
         }
 
 
         [HttpPost]
-        [Authorize(Roles = "customer")]
+        //[Authorize(Roles = "customer")]
         public int AddOneProductInBasket(int id)
         {
             int userId;
-
+            if(HttpContext.User.Claims == null || HttpContext.User.Claims.Count() == 0) //проверка авторизации пользователя
+            {
+                return StatusCodes.Status403Forbidden;
+            }
             if (int.TryParse(HttpContext.User.Claims.ToList().First().Value, out userId))
             {
                 // var customer = context.Customers.Include(t => t.Basket).First(i=>i.Id==userId);
@@ -142,15 +145,19 @@ namespace KindBee.Controllers
                     return StatusCodes.Status200OK;
                 }
 
-                return StatusCodes.Status203NonAuthoritative;
+                return StatusCodes.Status403Forbidden;
             }
-            return StatusCodes.Status203NonAuthoritative;
+            return StatusCodes.Status403Forbidden;
         }
 
         [HttpPost]
         public int DeleteAllPositions()
         {
             int id;
+            if (HttpContext.User.Claims == null || HttpContext.User.Claims.Count() == 0) //проверка авторизации пользователя
+            {
+                return StatusCodes.Status403Forbidden;
+            }
             if (int.TryParse(HttpContext.User.Claims.ToList().First().Value, out id))
             {
                 var customer = customerDAL.Get(id);
@@ -164,9 +171,9 @@ namespace KindBee.Controllers
                     _kindBeeDBContext.SaveChanges();
                     return StatusCodes.Status200OK;
                 }
-                return StatusCodes.Status203NonAuthoritative;
+                return StatusCodes.Status403Forbidden;
             }
-            return StatusCodes.Status203NonAuthoritative;
+            return StatusCodes.Status403Forbidden;
 
         }
         [HttpGet(Name = "GetAllItems")]

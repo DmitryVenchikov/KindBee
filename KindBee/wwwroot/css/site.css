@@ -26,6 +26,8 @@ html, body {
 body {
     display: flex;
     flex-direction: column;
+    background-color: #FFF073;
+    /* background-image: url('../photo/justsots.jpg');*/
 }
 
 .container {
@@ -36,19 +38,25 @@ footer {
     flex-shrink: 0;
 }
 
-a{
+.IncreaseA{
     text-decoration:none;
     color:black;
 }
 
-    a:hover {
-        font-size: 120%;
-        transition: 0.5s;
-        text-decoration: none;
-        color: black;
-    }
+.IncreaseA:hover {
+    font-size: 120%;
+    transition: 0.5s;
+    text-decoration: none;
+    color: black;
+}
 
 .delete:hover {
     transition: 0.5s;
     color: red;
 }
+
+
+
+
+
+ 

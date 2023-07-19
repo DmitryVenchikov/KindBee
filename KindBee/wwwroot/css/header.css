@@ -1,7 +1,8 @@
 
 
 nav {
-    background-color: lawngreen;
+    /* background-color: #D5F800;*/
+    background: linear-gradient(#D5F800, #FFF073 );
     /*margin: 50px;*/
     height: 80px;
     line-height: 80px;

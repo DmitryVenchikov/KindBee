@@ -23,7 +23,8 @@
 }
 
 footer {
-    background-color: lawngreen;
+    background: linear-gradient(#FFF073, #D5F800);
+    /*  background-color: #D5F800;*/
     margin: 0px;
     padding: 0px;
     left: 0;
