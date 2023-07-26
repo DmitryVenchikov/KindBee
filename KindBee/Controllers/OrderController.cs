@@ -22,7 +22,7 @@ namespace KindBee.Controllers
         static IDataAccess<Position> positionDAL;
         static IDataAccess<Product> productDAL;
         static KindBeeDBContext _kindBeeDBContext;
-
+        private IConfiguration _configuration;
        
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
@@ -31,7 +31,7 @@ namespace KindBee.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        public OrderController(ILogger<OrderController> logger, KindBeeDBContext dBContext)
+        public OrderController(ILogger<OrderController> logger, KindBeeDBContext dBContext, IConfiguration configuration)
         {
             _logger = logger;
             _kindBeeDBContext = dBContext;
@@ -40,6 +40,7 @@ namespace KindBee.Controllers
             customerDAL = new CustomerDAL(_kindBeeDBContext);
             positionDAL = new PositionDAL(_kindBeeDBContext);
             productDAL = new ProductDAL(_kindBeeDBContext);
+            _configuration = configuration;
         }
         public async Task<IActionResult> Init()
         {
@@ -116,6 +117,7 @@ namespace KindBee.Controllers
                         //добавляем остальные заказы клиента
  
                         //await Sender.SendEmailAsync("venchikovdmitri@mail.ru", "Новый заказ от интернет магазина KindBee", body.ToString());
+                        await Sender.SendEmailAsync(_configuration["mail"], "Новый заказ от интернет магазина KindBee", body.ToString());
                     }
                     return View(customer.Orders.ToList());
                 }

@@ -16,6 +16,7 @@
     }
 
     document.querySelector('.totalSum').textContent = total;
+    return total;
     /*
    //alert(total);
    // e = document.getElementByName('totalSum');
@@ -72,18 +73,28 @@ function DeleteOneProductFromBasket(Id, el) {
     var count = Number(product.children[2].textContent);
     $.post("/Basket/DeleteOneProductFromBasket", { id: Id })
         .done(function (data) {
-
-
             if (data == 204) {
                 var row = el.parentNode.parentNode;
                 row.remove();
-
                 return;
             }
             else if (data == 200) {
                 count--;
                 product.children[2].textContent = count;
-                ReCountTotalSum();
+                if (count == 0) {
+                    var str = el.parentNode.parentNode;
+                    str.remove();
+                }
+
+                var totalSum = ReCountTotalSum();
+                if (totalSum <= 0) {
+                    $("#BasketTable").remove();
+                    $("#deleteButton").remove();
+                    let emptyBasketMessageBlock = document.createElement('div');
+                    emptyBasketMessageBlock.innerHTML = "<h3 style=\"margin:100px\">Вы очистили корзину</h3>";
+                    orderButton.before(emptyBasketMessageBlock);
+                    $("#orderButton").remove();
+                }
             }
             else {
                 alert("Не удалось удалить из-за проблемы на сервере. Повторите операцию позже");
@@ -93,18 +104,30 @@ function DeleteOneProductFromBasket(Id, el) {
 
 
 function DeletePositionFromBasket(Id, el) {
-    $.post("/Basket/DeletePosition", { id: Id })
-        .done(function (data) {
-            if (data == 200) {
-                var str = el.parentNode.parentNode;
-                str.remove();
-                ReCountTotalSum();
-                return;
-            }
-            else {
-                alert("Не удалось удалить из-за проблемы на сервере. Повторите операцию позже");
-            }
-        });
+    setTimeout(function () {
+        $.post("/Basket/DeletePosition", { id: Id })
+            .done(function (data) {
+                if (data == 200) {
+                    var str = el.parentNode.parentNode;
+                    str.remove();
+                    var totalSum = ReCountTotalSum();
+                    if (totalSum <= 0) {
+                        $("#BasketTable").remove();
+                        $("#deleteButton").remove();
+                        let emptyBasketMessageBlock = document.createElement('div');
+                        emptyBasketMessageBlock.innerHTML = "<h3 style=\"margin:100px\">Вы очистили корзину</h3>";
+                        orderButton.before(emptyBasketMessageBlock);
+                        $("#orderButton").remove();
+                    }
+                    return;
+                }
+                else {
+                    alert("Не удалось удалить из-за проблемы на сервере. Повторите операцию позже");
+                }
+            });
+    }, 500);
+
+
 };
 
 function DeleteAllPositions() {
@@ -112,7 +135,12 @@ function DeleteAllPositions() {
         .done(function (data) {
             if (data == 200) {
                 /* $("#tableBody").children().remove();*/
-                $("#tableBody").remove();
+                $("#BasketTable").remove();
+                $("#deleteButton").remove();
+                let emptyBasketMessageBlock = document.createElement('div');
+                emptyBasketMessageBlock.innerHTML = "<h3 style=\"margin:100px\">Вы очистили корзину</h3>";
+                orderButton.before(emptyBasketMessageBlock);
+                $("#orderButton").remove();
                 return;
             }
             else {

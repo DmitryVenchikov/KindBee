@@ -4,8 +4,13 @@
 @model KindBee.DB.DBModels.Basket;
 
 <head>
-    <link rel="stylesheet" href="~/css/BasketInit.css"/>
-    <link rel="stylesheet" href="~/css/deleteButton.css"/>
+    <link rel="stylesheet" href="~/css/BasketInit.css" />
+    <link rel="stylesheet" href="~/css/deleteButton.css" />
+
+    <link rel="stylesheet" href="~/css/removeButton.css" />
+   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js" />
+
     <link rel="stylesheet" href="~/css/submitButton.css" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:600" />
     <script type="text/jscript" src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
@@ -17,12 +22,13 @@
     }
     else
     {
-        <table class="table">
+        <table id="BasketTable" class="table">
             <thead>
                 <tr>
                     <th>Наименование продукта</th>
                     <th>Цена за 1 шт.</th>
                     <th>Количество</th>
+                    <th></th>
                     <th></th>
                     <th></th>
                 </tr>
@@ -34,29 +40,35 @@
                         <td>@item.Product.Name</td>
                         <td name="price">@item.Product.Price</td>
                         <td name="quantity">@item.Quantity</td>
-                        <td name="m">
+                        <td name="m"style="display: flex; flex-direction: row; justify-content: flex-start; width:300px">
                             <button onclick="AddOneProductInBasket(@item.Product.Id, this)" type="submit" class="plus-btn">+</button>
                             <button onclick="DeleteOneProductFromBasket(@item.Product.Id, this)" type="submit" class="minus-btn">-</button>
-                            <button class="delete" onclick="DeletePositionFromBasket(@item.Product.Id, this)">Удалить этот продукт</button>
+                            <a onclick="DeletePositionFromBasket(@item.Product.Id, this)" class="button" href="#" role="button">
+                                <span>Удалить позицию</span>
+                                <div class="icon">
+                                    <i class="fa fa-remove"></i>
+                                    <i class="fa fa-check"></i>
+                                </div>
+                            </a>
                         </td>
+                    
                     </tr>
-
                 }
                 <tr><td>Итого - <p class="totalSum" name="totalSum" id="totalSum"> @Model.TotalSum</p>рублей</td></tr>
             </tbody>
         </table>
 
-        <div class="button">
+        <div id="orderButton" class="orderButton">
             <div class="text">Оформить заказ</div>
         </div>
-       
+
         <div class="progress-bar"></div>
         <svg x="0px" y="0px"
          viewBox="0 0 25 30" style="enable-background:new 0 0 25 30;">
             <path class="check" class="st0" d="M2,19.2C5.9,23.6,9.4,28,9.4,28L23,2" />
         </svg>
 
-        <div class="deleteButton">
+        <div id="deleteButton" class="deleteButton">
             <div class="deleteButton-back">
                 <p>Вы уверены, что хотите очистить корзину?</p>
                 <button class="yes">Да</button>
@@ -64,16 +76,16 @@
             </div>
             <div class="deleteButton-front">Очистить корзину</div>
         </div>
+
     }
 
-
-    <a href="@Url.Action("Index", "Home")">Перейти на главную</a>
 </div>
 <script type="text/jscript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 <script type="text/jscript" src="https://cdnjs.cloudflare.com/ajax/libs/animejs/2.0.2/anime.js"> </script>
 <script type="text/jscript" src="~/js/basketInit.js" asp-append-version="true"></script>
 <script type="text/jscript" src="~/js/deleteButton.js" asp-append-version="true"></script>
 <script type="text/jscript" src="~/js/submitButton.js" asp-append-version="true"></script>
+<script type="text/jscript" src="~/js/removeButton.js" asp-append-version="true"></script>
 @*<script type="text/jscript">
-  
+
 </script>*@

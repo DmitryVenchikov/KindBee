@@ -23,10 +23,11 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
                     options.LoginPath = new Microsoft.AspNetCore.Http.PathString("/Account/Login");
                     options.AccessDeniedPath = new Microsoft.AspNetCore.Http.PathString("/Account/Login");
                 });
-
+builder.Configuration.AddJsonFile("mySettings.json");
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<KindBeeDBContext>(options => options.UseSqlServer(builder.Configuration["DefaultConnection"], b => b.MigrationsAssembly("DOKINWebApplicationMVC")));
 builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
+
 
 //builder.Services.AddDbContext<DokinDbContext>();
 //builder.Services.AddTransient<IDataAccessCar, CarsDAL>();

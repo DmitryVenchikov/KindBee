@@ -18,7 +18,7 @@ basicTimeline
         opacity: "0"
     })
     .add({
-        targets: ".button",
+        targets: ".orderButton",
         duration: 1300,
         height: 10,
         width: 300,
@@ -33,7 +33,7 @@ basicTimeline
         easing: "linear"
     })
     .add({
-        targets: ".button",
+        targets: ".orderButton",
         width: 0,
         duration: 1
     })
@@ -44,7 +44,7 @@ basicTimeline
         delay: 500,
         duration: 750,
         borderRadius: 80,
-        backgroundColor: "#71DFBE"
+        backgroundColor: "#74E600"
     })
     .add({
         targets: pathEl,
@@ -53,7 +53,7 @@ basicTimeline
         easing: "easeInOutSine"
     });
 
-$(".button").click(function () {
+$(".orderButton").click(function () {
     basicTimeline.play();
     InitOrder();
 });

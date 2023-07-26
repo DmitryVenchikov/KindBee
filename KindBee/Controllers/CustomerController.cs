@@ -25,7 +25,7 @@ namespace KindBee.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        public CustomerController( ILogger<CustomerController> logger)
+        public CustomerController( ILogger<CustomerController> logger, IConfiguration configuration)
         {
             _logger = logger;
             dal = new CustomerDAL(KindBeeDBContext.GetContext());
