@@ -5,8 +5,13 @@ using Microsoft.Extensions.Options;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 using System.Text.Json.Serialization;
 using KindBee.DB;
+using Microsoft.AspNetCore.Hosting.WindowsServices;
+using Microsoft.AspNetCore;
+using System.Diagnostics;
 
 var builder = WebApplication.CreateBuilder(args);
+
+
 
 // Add services to the container.
 
@@ -57,3 +62,16 @@ app.MapControllerRoute(
 pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
+
+
+//// получаем путь к файлу 
+//var pathToExe = Process.GetCurrentProcess().MainModule.FileName;
+//// путь к каталогу проекта
+//var pathToContentRoot = Path.GetDirectoryName(pathToExe);
+//// создаем хост
+//var host = WebHost.CreateDefaultBuilder(args)
+//        .UseContentRoot(pathToContentRoot)
+//        //.UseStartup<Startup>()
+//        .Build();
+//// запускаем в виде службы
+//host.RunAsService();
