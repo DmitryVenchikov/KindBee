@@ -2,29 +2,55 @@
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=true" />
+
+
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-   <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/KindBee.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/footer.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/header.css" asp-append-version="true" />
 </head>
 <body>
 
-    <header>
-        <div class="logo">
-        </div>
+    @*    <header>
+    <div class="logo">
+    </div>
 
-        <nav>
-            <ul class="menu">
-                <li> <a asp-area="" asp-controller="Home" asp-action="Index">Главная</a></li>
-                <li> <a asp-area="" asp-controller="Basket" asp-action="Init">Корзина</a></li>
-                <li> <a asp-area="" asp-controller="Order" asp-action="Init">Мои заказы</a></li>
-                <li> <a asp-area="" asp-controller="Home" asp-action="Privacy">Наша политика сотрудничества</a></li>
-                <li> <a asp-area="" asp-controller="Account" asp-action="Logout">Выйти</a></li>
-                <li> <a asp-area="" asp-controller="Admin" asp-action="Init">Режим администратора</a></li>
-            </ul>
-        </nav>
+    <nav>
+    <ul class="menu">
+    <li> <a asp-area="" asp-controller="Home" asp-action="Index">Главная</a></li>
+    <li> <a asp-area="" asp-controller="Basket" asp-action="Init">Корзина</a></li>
+    <li> <a asp-area="" asp-controller="Order" asp-action="Init">Мои заказы</a></li>
+    <li> <a asp-area="" asp-controller="Home" asp-action="Privacy">Наша политика сотрудничества</a></li>
+    <li> <a asp-area="" asp-controller="Account" asp-action="Logout">Выйти</a></li>
+    <li> <a asp-area="" asp-controller="Admin" asp-action="Init">Режим администратора</a></li>
+    </ul>
+    </nav>
+    </header>*@
+    <header>
+        <div class="container">
+            <div class="row col-sm-15">
+                <div  class="col-md-2 headerBlock">
+                     <a asp-area="" asp-controller="Home" asp-action="Index">Главная</a> 
+                </div>
+                <div  class="col-md-2  headerBlock">
+                    <a asp-area="" asp-controller="Basket" asp-action="Init">Корзина</a>
+                </div>
+                <div  class="col-md-2  headerBlock">
+                    <a asp-area="" asp-controller="Order" asp-action="Init">Мои заказы</a>
+                </div>
+                <div  class="col-md-3 headerBlock">
+                    <a asp-area="" asp-controller="Home" asp-action="Privacy">Политика сотрудничества</a>
+                </div>
+@*                <div   class="col-md-2 headerBlock">
+                    <a asp-area="" asp-controller="Admin" asp-action="Init">Режим администратора</a>
+                </div>*@
+                <div   class="col-md-2  headerBlock">
+                    <a asp-area="" asp-controller="Account" asp-action="Logout">Выйти</a>
+                </div>
+            </div>
+        </div>
     </header>
 
     <div class="container">
@@ -34,40 +60,71 @@
         </main>
     </div>
 
+    @*    <footer>
+    <div class="myFooter">
+
+    <div class="footerColumn">
+    <div class="footerElementTitle">Информация</div>
+    <div class="footerElement"> <a class="IncreaseA" asp-area="" asp-controller="Home" asp-action="Privacy">Доставка и оплата</a></div>
+    <div class="footerElement"> <a class="IncreaseA" asp-area="" asp-controller="Home" asp-action="Privacy">Как сделать заказ</a></div>
+    <div class="footerElement"> <a class="IncreaseA" asp-area="" asp-controller="Home" asp-action="Privacy">Промокоды и купоны</a></div>
+    </div>
+
+    <div class="footerColumn">
+    <div class="footerElementTitle">Служба поддержки</div>
+    <div class="footerElement"><a class="IncreaseA" asp-area="" asp-controller="Home" asp-action="Privacy">Наши контакты</a></div>
+    <div class="footerElement"> <a class="IncreaseA" asp-area="" asp-controller="Home" asp-action="Privacy">Товары со скидкой</a> </div>
+    <div class="footerElement"> <a class="IncreaseA" asp-area="" asp-controller="Home" asp-action="Privacy">Клубная программа</a> </div>
+    </div>
+
+    <div class="footerColumn">
+    <div class="footerElementTitle">Дополнительно</div>
+    <div class="footerElement"><a class="IncreaseA" asp-area="" asp-controller="Home" asp-action="Privacy">Личный кабинет</a></div>
+    <div class="footerElement"><a class="IncreaseA" asp-area="" asp-controller="Home" asp-action="Privacy">Рассылка новостей</a></div>
+    <div class="footerElement"><a class="IncreaseA" asp-area="" asp-controller="Home" asp-action="Privacy">Карта сайта</a></div>
+    <div class="footerElement"><a class="IncreaseA" asp-area="" asp-controller="Home" asp-action="Privacy">Политика конфиденциальности</a></div>
+
+    </div>
+    <div class="footerColumn">
+    <div class="footerElementTitle">Наши контакты</div>
+    <div class="footerElement">тел. 89009641212</div>
+    <div class="footerElement">email: venchikovdmitriiii@mail.ru</div>
+    <div class="footerElementTitle">Наш адрес</div>
+    <div class="footerElement">г. Рязань, ул. Пушкина д. 7</div>
+    </div>
+    </div>
+    </footer>*@
+
     <footer>
-        <div class="myFooter">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 col-sm-6">
+                    <h3>О нас</h3>
 
-            <div class="footerColumn">
-                <div class="footerElementTitle">Информация</div>
-                <div class="footerElement"> <a class="IncreaseA" asp-area="" asp-controller="Home" asp-action="Privacy">Доставка и оплата</a></div>
-                <div class="footerElement"> <a class="IncreaseA" asp-area="" asp-controller="Home" asp-action="Privacy">Как сделать заказ</a></div>
-                <div class="footerElement"> <a class="IncreaseA" asp-area="" asp-controller="Home" asp-action="Privacy">Промокоды и купоны</a></div>
-            </div>
-
-            <div class="footerColumn">
-                <div class="footerElementTitle">Служба поддержки</div>
-                <div class="footerElement"><a class="IncreaseA" asp-area="" asp-controller="Home" asp-action="Privacy">Наши контакты</a></div>
-                <div class="footerElement"> <a class="IncreaseA" asp-area="" asp-controller="Home" asp-action="Privacy">Товары со скидкой</a> </div>
-                <div class="footerElement"> <a class="IncreaseA" asp-area="" asp-controller="Home" asp-action="Privacy">Клубная программа</a> </div>
-            </div>
-
-            <div class="footerColumn">
-                <div class="footerElementTitle">Дополнительно</div>
-                <div class="footerElement"><a class="IncreaseA" asp-area="" asp-controller="Home" asp-action="Privacy">Личный кабинет</a></div>
-                <div class="footerElement"><a class="IncreaseA" asp-area="" asp-controller="Home" asp-action="Privacy">Рассылка новостей</a></div>
-                <div class="footerElement"><a class="IncreaseA" asp-area="" asp-controller="Home" asp-action="Privacy">Карта сайта</a></div>
-                <div class="footerElement"><a class="IncreaseA" asp-area="" asp-controller="Home" asp-action="Privacy">Политика конфиденциальности</a></div>
-
-            </div>
-            <div class="footerColumn">
-                <div class="footerElementTitle">Наши контакты</div>
-                <div class="footerElement">тел. 89009641212</div>
-                <div class="footerElement">email: venchikovdmitriiii@mail.ru</div>
-                <div class="footerElementTitle">Наш адрес</div>
-                <div class="footerElement">г. Рязань, ул. Пушкина д. 7</div>
+                    <p>На протяжении многих лет наша семья занималась пчеловодством, и для нас как не для кого другого важно, чтобы качество нашего продукта находилось на самом высоком уровне. Наши продукты пасеки производятся вручную и проходят строгий контроль качества.
+                Мы предлагаем большой выбор, включая пергу, разные виды меда, включая мед в сотах.</p>
+                </div>
+                <div class="col-md-4 col-sm-6">
+                    <h3>Контакты</h3>
+                    <ul class="list-unstyled">
+                        <li><i class="fa fa-map-marker"></i> Адрес: ул. Пушкина, д. 10, офис 25</li>
+                        <li><i class="fa fa-phone"></i> Телефон: +7 (123) 456-78-90</li>
+                        <li><i class="fa fa-envelope"></i> Email: info@example.com</li>
+                    </ul>
+                </div>
+                <div class="col-md-4 col-sm-12">
+                    <h3>Подписаться на рассылку</h3>
+                    <form>
+                        <div class="form-group">
+                            <input type="email" class="form-control" placeholder="Введите ваш email">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Подписаться</button>
+                    </form>
+                </div>
             </div>
         </div>
     </footer>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

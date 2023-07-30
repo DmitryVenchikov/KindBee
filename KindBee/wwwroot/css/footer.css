@@ -1,4 +1,4 @@
-.myFooter {
+/*.myFooter {
     padding-top: 1.5%;
     padding-bottom: 1.5%;
     padding-left: 0px;
@@ -23,12 +23,90 @@
 }
 
 footer {
-    background: linear-gradient(#FFF073, #D5F800);
+    background: linear-gradient(#FFF073, #D5F800);*/
     /*  background-color: #D5F800;*/
-    margin: 0px;
+    /*margin: 0px;
     padding: 0px;
     left: 0;
     bottom: 0;
     width: 100%;
     flex-shrink: 0;
+}*/
+
+
+
+
+
+
+/*****************/
+
+
+footer {
+    background: linear-gradient(#FFF073, #D5F800);
+    padding: 50px 0;
+
+    width: 100%;
+}
+
+    footer h3 {
+        font-size: 20px;
+        font-weight: 600;
+        margin-bottom: 20px;
+    }
+
+    footer p {
+        font-size: 16px;
+        line-height: 24px;
+    }
+
+    footer ul {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+        footer ul li {
+            font-size: 16px;
+            line-height: 24px;
+        }
+
+            footer ul li i {
+              /*  margin-right: 10px;*/
+            }
+
+    footer form {
+        margin-top: 20px;
+    }
+
+max-width: 767px {
+    footer h3
+
+{
+    margin-top: 40px;
+}
+
+footer ul li {
+    margin-bottom: 10px;
+}
+
+}
+
+max-width: 576px {
+    footer h3
+
+{
+    font-size: 18px;
+    margin-top: 30px;
+    margin-bottom: 15px;
+}
+
+footer p {
+    font-size: 14px;
+    line-height: 22px;
+}
+
+footer ul li {
+    font-size: 14px;
+    line-height: 22px;
+}
 }

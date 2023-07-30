@@ -1,38 +1,28 @@
 
-
-nav {
-    /* background-color: #D5F800;*/
+header {
     background: linear-gradient(#D5F800, #FFF073 );
-    /*margin: 50px;*/
-    height: 80px;
-    line-height: 80px;
+    padding: 1% 0;
+    width: 100%;
 }
+ 
 
-.menu {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    justify-content: center;
+.headerBlock {
+    text-align: center;
+
 }
-
-    .menu li {
-        margin: 0 10px;
+    .headerBlock a {
+        text-decoration: none;
+        color: #333;
+        font-size: 20px;
+        padding: 10px;
     }
 
-        .menu li a {
+        .headerBlock a:hover {
+            font-size: 150%;
+            transition: 0.5s;
             text-decoration: none;
-            color: #333;
-            font-size: 20px;
-            padding: 10px;
+            color: black;
         }
-
-            .menu li a:hover {
-                font-size: 150%;
-                transition: 0.5s;
-                text-decoration: none;
-                color: black;
-            }
 
 
  
