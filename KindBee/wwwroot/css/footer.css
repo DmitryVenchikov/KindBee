@@ -44,8 +44,9 @@ footer {
 footer {
     background: linear-gradient(#FFF073, #D5F800);
     padding: 50px 0;
-
     width: 100%;
+
+    flex: 0 0 auto;
 }
 
     footer h3 {

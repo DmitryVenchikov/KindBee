@@ -19,6 +19,38 @@ html {
 
 
 
+* {
+    margin: 0;
+    padding: 0;
+}
+
+html,
+body {
+    height: 100%;
+}
+
+main {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.container {
+    flex: 1 0 auto;
+}
+
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+ 
+footer {
+    flex: 0 0 auto;
+}
+
+
 html {
     height: 100%;
 }
@@ -29,8 +61,8 @@ body {
     flex-direction: column;
     background-color: #FFF073;
     overflow-x: hidden;
-    min-height: 400px;
-    height: 100%;
+ 
+ 
     /* background-image: url('../photo/justsots.jpg');*/
 }
 

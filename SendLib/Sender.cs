@@ -7,7 +7,6 @@ namespace SendLib
     {
         public static string From { get; set; }
         public static string To { get; set; }
-
         public static string FromName { get; set; }
         public static string SMTPHost { get; set; }
         public static int SMTPPort { get; set; }
