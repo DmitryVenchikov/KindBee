@@ -4,8 +4,10 @@ using KindBee.DB.DAL;
 using KindBee.DB.DBModels;
 using KindBee.DB.Interfaces;
 using KindBee.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SendLib;
+using System.Data;
 using System.Diagnostics;
 using System.Text;
 
@@ -42,6 +44,7 @@ namespace KindBee.Controllers
             productDAL = new ProductDAL(_kindBeeDBContext);
             _configuration = configuration;
         }
+        [Authorize(Roles = "customer")]
         public async Task<IActionResult> Init()
         {
             int id;
@@ -134,13 +137,14 @@ namespace KindBee.Controllers
 
 
 
-
+        [Authorize(Roles = "customer")]
 
         [HttpGet(Name = "GetAllItems")]
         public IEnumerable<Order> Get()
         {
             return orderDAL.Get();
         }
+        [Authorize(Roles = "customer")]
 
         [HttpGet("{id}", Name = "GetOrder")]
         public IActionResult Get(int Id)
@@ -154,7 +158,7 @@ namespace KindBee.Controllers
 
             return new ObjectResult(Order);
         }
-
+        [Authorize(Roles = "customer")]
         [HttpPost]
         public IActionResult Create([FromBody] Order Order)
         {
@@ -165,7 +169,7 @@ namespace KindBee.Controllers
             orderDAL.Add(Order);
             return CreatedAtRoute("GetOrder", new { id = Order.Id }, Order);
         }
-
+        [Authorize(Roles = "customer")]
         [HttpPut("{id}")]
         public IActionResult Update(int Id, [FromBody] Order updatedOrder)
         {
@@ -183,7 +187,7 @@ namespace KindBee.Controllers
             orderDAL.Update(updatedOrder);
             return RedirectToRoute("GetAllItems");
         }
-
+        [Authorize(Roles = "customer")]
         [HttpDelete("{id}")]
         public IActionResult Delete(int Id)
         {
