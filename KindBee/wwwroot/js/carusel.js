@@ -3,7 +3,6 @@
 
 window.onload = function () {
     window.scrollTo(0, +localStorage.getItem('page_scroll'));
-
    
     document.addEventListener('scroll', function () {
         localStorage.setItem('page_scroll', window.pageYOffset);

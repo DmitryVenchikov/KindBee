@@ -87,7 +87,7 @@ body {
 
 @media (max-width: 780px) {
     main .login-box {
-        max-width: 400px;
+        max-width: 350px;
         min-width: 250px;
         width: 70%;
         position: relative;
@@ -103,7 +103,7 @@ body {
 }
 
 .login-box {
-    max-width: 400px;
+    max-width: 350px;
     min-width: 250px;
     position: relative;
     top: 47%;

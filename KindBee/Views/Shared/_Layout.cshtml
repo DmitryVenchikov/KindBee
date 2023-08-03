@@ -30,24 +30,26 @@
     </header>*@
     <header>
         <div class="container">
-            <div class="row col-sm-15">
-                <div class="col-md-2 headerBlock">
+            <div style="display: flex;
+  justify-content: space-between;
+  align-items: center;">
+                <div class=" headerBlock">
                     <a asp-area="" asp-controller="Home" asp-action="Index">Главная</a>
                 </div>
-                <div class="col-md-2  headerBlock">
+                <div class="headerBlock">
                     <a asp-area="" asp-controller="Basket" asp-action="Init">Корзина</a>
                 </div>
-                <div class="col-md-2  headerBlock">
+                <div class="headerBlock">
                     <a asp-area="" asp-controller="Order" asp-action="Init">Мои заказы</a>
-                </div>
-                <div class="col-md-3 headerBlock">
-                    <a asp-area="" asp-controller="Home" asp-action="Privacy">Политика сотрудничества</a>
                 </div>
                 @*                <div   class="col-md-2 headerBlock">
                 <a asp-area="" asp-controller="Admin" asp-action="Init">Режим администратора</a>
                 </div>*@
-                <div class="col-md-2  headerBlock">
+                <div id="Logout" class="headerBlock">
                     <a asp-area="" asp-controller="Account" asp-action="Logout">Выйти</a>
+                </div>
+                <div id="LoginButton" class="headerBlock">
+                    <a  asp-area="" asp-controller="Account" asp-action="Login">Авторизоваться</a>
                 </div>
             </div>
         </div>
@@ -93,8 +95,9 @@
     </div>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+   
     <script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

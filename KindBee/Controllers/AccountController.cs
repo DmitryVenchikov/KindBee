@@ -54,6 +54,26 @@ namespace KindBee.Controllers
             return View();
         }
 
+        [HttpGet]
+        public bool IsAuthorized()
+        {
+            int id;
+            if(HttpContext.User.Claims == null || HttpContext.User.Claims.Count()==0)
+            {
+                return false;
+            }
+            if (int.TryParse(HttpContext.User.Claims.ToList().First().Value, out id))
+            {
+                var customer = dal.Get(id);
+                if (customer != null) //если такой клиент существует
+                {
+                    return true;
+                }
+                return false;
+            }
+            return false;
+        }
+
         [HttpPost]
         public async Task<IActionResult> Register(CustomerRegisterVM model)
         {

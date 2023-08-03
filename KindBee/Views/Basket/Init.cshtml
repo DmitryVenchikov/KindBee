@@ -8,8 +8,11 @@
     <link rel="stylesheet" href="~/css/deleteButton.css" />
 
     <link rel="stylesheet" href="~/css/removeButton.css" />
-   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js" />
+
+
+    <link rel="stylesheet" href="~/css/myTable.css" />
 
     <link rel="stylesheet" href="~/css/submitButton.css" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:600" />
@@ -22,41 +25,59 @@
     }
     else
     {
-        <table id="BasketTable" class="table">
-            <thead>
-                <tr>
-                    <th>Наименование продукта</th>
-                    <th>Цена за 1 шт.</th>
-                    <th>Количество</th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody id="tableBody">
-                @foreach (var item in Model.Positions)
-                {
+ 
+ 
+        <div id="BasketTable" class="table-wrap">
+            <table>
+                <thead>
                     <tr>
-                        <td>@item.Product.Name</td>
-                        <td name="price">@item.Product.Price</td>
-                        <td name="quantity">@item.Quantity</td>
-                        <td name="m"style="display: flex; flex-direction: row; justify-content: flex-start; width:300px">
-                            <button onclick="AddOneProductInBasket(@item.Product.Id, this)" type="submit" class="plus-btn">+</button>
-                            <button onclick="DeleteOneProductFromBasket(@item.Product.Id, this)" type="submit" class="minus-btn">-</button>
-                            <a onclick="DeletePositionFromBasket(@item.Product.Id, this)" class="button" href="#" role="button">
-                                <span>Удалить позицию</span>
-                                <div class="icon">
-                                    <i class="fa fa-remove"></i>
-                                    <i class="fa fa-check"></i>
-                                </div>
-                            </a>
-                        </td>
-                    
+                        <th>Наименование продукта</th>
+                        <th>Цена за 1 шт.</th>
+                        <th>Количество</th>
+                        <th></th>
                     </tr>
-                }
-                <tr><td>Итого - <p class="totalSum" name="totalSum" id="totalSum"> @Model.TotalSum</p>рублей</td></tr>
-            </tbody>
-        </table>
+                </thead>
+                <tbody id="tableBody">
+                    @foreach (var item in Model.Positions)
+                    {
+                        <tr>
+                            <td data-label="Наименование продукта">@item.Product.Name</td>
+                            <td data-label="Цена за 1 шт." name="price">@item.Product.Price</td>
+                            <td data-label="Количество" name="quantity">@item.Quantity</td>
+                            <td name="m" style="display: flex; flex-direction: row; justify-content: flex-start; width:300px">
+                                <button onclick="AddOneProductInBasket(@item.Product.Id, this)" type="submit" class="plus-btn">+</button>
+                                <button onclick="DeleteOneProductFromBasket(@item.Product.Id, this)" type="submit" class="minus-btn">-</button>
+                                <a onclick="DeletePositionFromBasket(@item.Product.Id, this)" class="button" href="#" role="button">
+                                    <span>Удалить позицию</span>
+                                    <div class="icon">
+                                        <i class="fa fa-remove"></i>
+                                        <i class="fa fa-check"></i>
+                                    </div>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                    <tr><td>Итого - <p class="totalSum" name="totalSum" id="totalSum"> @Model.TotalSum</p>рублей</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         <div id="orderButton" class="orderButton">
             <div class="text">Оформить заказ</div>
