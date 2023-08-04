@@ -14,11 +14,22 @@
                 });
         };
         function Update(Id) {
-        $.get("/Product/Update", { id: Id })
-            .done(function (data) {
-                location.reload();
-            });
-                };
+            $.get("/Product/Update", { id: Id })
+                .done(function (data) {
+                    location.reload();
+                });
+        };
+
+        function UpdateMetaData() {
+            var Key = document.getElementById('metaKey').value;
+            var Value = document.getElementById('metaValue').value;
+
+            $.post("/Admin/ChangeConfiguration", { key1: Key, value1: Value })
+                .done(function (data) {
+ 
+                    location.reload();
+                });
+        };
     </script>
 
 </head>
@@ -41,6 +52,11 @@
             }
             <div></div>
         </div>
+     @*   <div>
+            <input id="metaKey"></input>
+            <input id="metaValue"></input>
+            <button id="saveMeta" onclick="UpdateMetaData()">Сохранить изменения</button>
+        </div>*@
     </div>
     <div><a href="@Url.Action("Create", "Product")">Добавить новый продукт</a></div>
 </div>

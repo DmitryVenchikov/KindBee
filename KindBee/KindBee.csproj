@@ -11,6 +11,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<PackageReference Include="FluentAssertions" Version="6.11.0" />
 		<PackageReference Include="jQuery" Version="3.6.3" />
 		<PackageReference Include="Microsoft.AspNetCore.Hosting.WindowsServices" Version="7.0.2" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="7.0.2" />

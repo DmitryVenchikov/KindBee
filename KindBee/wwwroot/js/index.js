@@ -24,8 +24,9 @@ function AddOneProductInBasket(Id, el) {
             }
         }).fail(function (data) {
              //если что то не так - выводим сообщение об ошибке
-            alert("error");
-            alert(data);
+            //alert("error");
+            //alert(data);
+            location.reload();
         });
 };
 
@@ -44,8 +45,9 @@ function DeleteOneProductFromBasket(Id, el) {
             count--;
             product.children[0].value = count;
         }).fail(function (data) {
-            alert("error");
-            alert(data);
+            //alert("error");
+            //alert(data);
+            location.reload();
         });
 
     /*.fail(function () {

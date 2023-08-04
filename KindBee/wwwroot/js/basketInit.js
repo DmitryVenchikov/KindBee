@@ -64,6 +64,7 @@ function AddOneProductInBasket(Id, el) {
             }
             else {
                 alert("Не удалось добавить товар из-за проблемы на сервере. Повторите операцию позже");
+                location.reload();
             }
         });
 };
@@ -98,6 +99,7 @@ function DeleteOneProductFromBasket(Id, el) {
             }
             else {
                 alert("Не удалось удалить из-за проблемы на сервере. Повторите операцию позже");
+                location.reload();
             }
         });
 };
@@ -123,6 +125,7 @@ function DeletePositionFromBasket(Id, el) {
                 }
                 else {
                     alert("Не удалось удалить из-за проблемы на сервере. Повторите операцию позже");
+                    location.reload();
                 }
             });
     }, 500);
@@ -145,6 +148,7 @@ function DeleteAllPositions() {
             }
             else {
                 alert("Не удалось удалить из-за проблемы на сервере. Повторите операцию позже");
+                location.reload();
             }
         });
 };

@@ -9,6 +9,8 @@ using System.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using System.Data;
+using FluentAssertions.Common;
+using System.Configuration;
 
 namespace KindBee.Controllers
 {
@@ -43,9 +45,18 @@ namespace KindBee.Controllers
 
         [Authorize(Roles = "admin")]
         [HttpPost]
-        public int ChangeConfiguration(string key, string value)
+        public int ChangeConfiguration(string key1, string value1)
         {
-            _configuration[key] = value;
+            _configuration[key1] = value1;
+            //System.Configuration.Configuration cfg = System.Configuration.ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+            //StartupFoldersConfigSection section = (StartupFoldersConfigSection)cfg.Section["StartupFolders"];
+            //if (section != null)
+            //{
+            //    System.Diagnostics.Debug.WriteLine(section.FolderItems[0].FolderType);
+            //    System.Diagnostics.Debug.WriteLine(section.FolderItems[0].Path);
+            //    section.FolderItems[0].Path = "C:\\Nanook";
+            //    cfg.Save(); //устанавливает перенос на новую строку и производит проверку <exename>.vshost.exe.config файла в вашей отладочной папке.
+            //}
             return 0;
         }
         //защитить

@@ -35,7 +35,7 @@ namespace KindBee.Controllers
         //    _logger = logger;
         //    dbContext = kindBeeDBContext;
         //    dal =  new ProductDAL(kindBeeDBContext);
-
+       
         //}
 
         public ProductController(ILogger<ProductController> logger)
