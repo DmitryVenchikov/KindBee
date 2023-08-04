@@ -109,12 +109,12 @@ namespace KindBee.Controllers
         //    return StatusCodes.Status203NonAuthoritative;
         //}
 
-  
 
         public IActionResult Privacy()
         {
             return View();
         }
+        [Authorize(Roles = "admin")]
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

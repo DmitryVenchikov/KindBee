@@ -31,7 +31,7 @@ namespace KindBee.Controllers
             productDAL = new ProductDAL(_kindBeeDBContext);
         }
 
-        [Authorize(Roles = "customer")]
+        [Authorize(Roles = "customer, admin")]
         [HttpGet(Name = "Init")]
         public IActionResult Init()
         {
@@ -54,9 +54,8 @@ namespace KindBee.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-
+        [Authorize(Roles = "customer, admin")]
         [HttpPost]
-        //[Authorize(Roles = "customer")]
         public int DeleteOneProductFromBasket(int id)
         {
             int userId;
@@ -151,6 +150,7 @@ namespace KindBee.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "customer, admin")]
         public int DeleteAllPositions()
         {
             int id;
@@ -176,12 +176,15 @@ namespace KindBee.Controllers
             return StatusCodes.Status403Forbidden;
 
         }
+
+        [Authorize(Roles = "customer, admin")]
         [HttpGet(Name = "GetAllItems")]
         public IEnumerable<Basket> Get()
         {
             return basketDAL.Get();
         }
 
+        [Authorize(Roles = "customer, admin")]
         [HttpGet("{id}", Name = "GetBasket")]
         public IActionResult Get(int Id)
         {
@@ -195,7 +198,7 @@ namespace KindBee.Controllers
             return new ObjectResult(Basket);
         }
 
-
+        [Authorize(Roles = "customer, admin")]
         [HttpPost]
         public IActionResult Create([FromBody] Basket Basket)
         {
@@ -207,6 +210,7 @@ namespace KindBee.Controllers
             return CreatedAtRoute("GetBasket", new { id = Basket.Id }, Basket);
         }
 
+        [Authorize(Roles = "customer, admin")]
         [HttpPut("{id}")]
         public IActionResult Update(int Id, [FromBody] Basket updatedBasket)
         {
@@ -225,6 +229,7 @@ namespace KindBee.Controllers
             return RedirectToRoute("GetAllItems");
         }
 
+        [Authorize(Roles = "customer, admin")]
         [HttpPost]
         public int DeletePosition(int id)
         {

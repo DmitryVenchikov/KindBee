@@ -3,7 +3,9 @@ using KindBee.DB.DAL;
 using KindBee.DB.DBModels;
 using KindBee.DB.Interfaces;
 using KindBee.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Data;
 using System.Diagnostics;
 
 namespace KindBee.Controllers
@@ -30,13 +32,13 @@ namespace KindBee.Controllers
             _logger = logger;
             dal = new CustomerDAL(KindBeeDBContext.GetContext());
         }
-
+        [Authorize(Roles = "admin")]
         [HttpGet(Name = "GetAllItems")]
         public IEnumerable<Customer> Get()
         {
             return dal.Get();
         }
-
+        [Authorize(Roles = "admin")]
         [HttpGet("{id}", Name = "GetCustomer")]
         public IActionResult Get(int Id)
         {
@@ -51,6 +53,7 @@ namespace KindBee.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "admin")]
         public IActionResult Create([FromBody] Customer Customer)
         {
             if (Customer == null)
@@ -62,6 +65,7 @@ namespace KindBee.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "admin")]
         public IActionResult Update(int Id, [FromBody] Customer updatedCustomer)
         {
             if (updatedCustomer == null || updatedCustomer.Id != Id)
@@ -80,6 +84,7 @@ namespace KindBee.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "admin")]
         public IActionResult Delete(int Id)
         {
             var deletedCustomer = dal.Delete(Id);

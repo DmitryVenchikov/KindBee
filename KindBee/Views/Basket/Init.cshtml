@@ -13,7 +13,7 @@
 
 
     <link rel="stylesheet" href="~/css/myTable.css" />
-
+    <link rel="stylesheet" href="~/css/liquidButton.css" />
     <link rel="stylesheet" href="~/css/submitButton.css" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:600" />
     <script type="text/jscript" src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
@@ -22,11 +22,18 @@
     @if (Model.Positions == null || Model.Positions.Count() == 0)
     {
         <h2>Ваша корзина пуста</h2>
+        <div class="liquidButtonContainer">
+            <a asp-area="" asp-controller="Home" asp-action="Index" class="btn-liquid">
+                <span class="inner">
+                    На главную
+                </span>
+            </a>
+        </div>
     }
     else
     {
- 
- 
+
+
         <div id="BasketTable" class="table-wrap">
             <table>
                 <thead>
@@ -64,21 +71,7 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+ 
         <div id="orderButton" class="orderButton">
             <div class="text">Оформить заказ</div>
         </div>
@@ -88,14 +81,17 @@
          viewBox="0 0 25 30" style="enable-background:new 0 0 25 30;">
             <path class="check" class="st0" d="M2,19.2C5.9,23.6,9.4,28,9.4,28L23,2" />
         </svg>
-
-        <div id="deleteButton" class="deleteButton">
-            <div class="deleteButton-back">
-                <p>Вы уверены, что хотите очистить корзину?</p>
-                <button class="yes">Да</button>
-                <button class="no">Нет</button>
+        <div style="width:100%; display: flex;
+  justify-content: space-between;
+  align-items: center;">
+            <div id="deleteButton" class="deleteButton">
+                <div class="deleteButton-back">
+                    <p>Вы уверены, что хотите очистить корзину?</p>
+                    <button class="yes">Да</button>
+                    <button class="no">Нет</button>
+                </div>
+                <div class="deleteButton-front">Очистить корзину</div>
             </div>
-            <div class="deleteButton-front">Очистить корзину</div>
         </div>
 
     }
@@ -107,6 +103,7 @@
 <script type="text/jscript" src="~/js/deleteButton.js" asp-append-version="true"></script>
 <script type="text/jscript" src="~/js/submitButton.js" asp-append-version="true"></script>
 <script type="text/jscript" src="~/js/removeButton.js" asp-append-version="true"></script>
+<script type="text/jscript" src="~/js/liquidButton.js" asp-append-version="true"></script>
 @*<script type="text/jscript">
 
 </script>*@

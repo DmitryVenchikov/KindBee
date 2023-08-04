@@ -137,14 +137,14 @@ namespace KindBee.Controllers
 
 
 
-        [Authorize(Roles = "customer")]
+        [Authorize(Roles = "customer, admin")]
 
         [HttpGet(Name = "GetAllItems")]
         public IEnumerable<Order> Get()
         {
             return orderDAL.Get();
         }
-        [Authorize(Roles = "customer")]
+        [Authorize(Roles = "customer, admin")]
 
         [HttpGet("{id}", Name = "GetOrder")]
         public IActionResult Get(int Id)
@@ -158,7 +158,7 @@ namespace KindBee.Controllers
 
             return new ObjectResult(Order);
         }
-        [Authorize(Roles = "customer")]
+        [Authorize(Roles = "customer, admin")]
         [HttpPost]
         public IActionResult Create([FromBody] Order Order)
         {
@@ -169,7 +169,7 @@ namespace KindBee.Controllers
             orderDAL.Add(Order);
             return CreatedAtRoute("GetOrder", new { id = Order.Id }, Order);
         }
-        [Authorize(Roles = "customer")]
+        [Authorize(Roles = "customer, admin")]
         [HttpPut("{id}")]
         public IActionResult Update(int Id, [FromBody] Order updatedOrder)
         {
@@ -187,7 +187,7 @@ namespace KindBee.Controllers
             orderDAL.Update(updatedOrder);
             return RedirectToRoute("GetAllItems");
         }
-        [Authorize(Roles = "customer")]
+        [Authorize(Roles = "customer, admin")]
         [HttpDelete("{id}")]
         public IActionResult Delete(int Id)
         {

@@ -7,6 +7,8 @@ using KindBee.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
+using System.Data;
 
 namespace KindBee.Controllers
 {
@@ -18,6 +20,7 @@ namespace KindBee.Controllers
         static IDataAccess<Basket> basketDAL;
         static IDataAccess<Product> productDAL;
         static KindBeeDBContext dbContext;
+        private IConfiguration _configuration;
         //public AdminController(KindBeeDBContext kindBeeDBContext, ILogger<HomeController> logger)
         //{
         //    _logger = logger;
@@ -27,7 +30,7 @@ namespace KindBee.Controllers
         //    productDAL = new ProductDAL(kindBeeDBContext);
         //    dbContext = kindBeeDBContext;
         //}
-        public AdminController(ILogger<HomeController> logger)
+        public AdminController(ILogger<HomeController> logger, IConfiguration configuration)
         {
             _logger = logger;
             dbContext = KindBeeDBContext.GetContext();
@@ -35,9 +38,18 @@ namespace KindBee.Controllers
             positionDAL = new PositionDAL(dbContext);
             basketDAL = new BasketDAL(dbContext);
             productDAL = new ProductDAL(dbContext);
-          
+            _configuration = configuration;
+        }
+
+        [Authorize(Roles = "admin")]
+        [HttpPost]
+        public int ChangeConfiguration(string key, string value)
+        {
+            _configuration[key] = value;
+            return 0;
         }
         //защитить
+        [Authorize(Roles = "admin")]
         public IActionResult Init()
         {
 
@@ -47,10 +59,6 @@ namespace KindBee.Controllers
             
         }
 
-        public IActionResult Privacy()
-        {
-            return View();
-        }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

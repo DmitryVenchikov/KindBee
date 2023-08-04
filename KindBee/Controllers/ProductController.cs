@@ -4,8 +4,10 @@ using KindBee.DB.DAL;
 using KindBee.DB.DBModels;
 using KindBee.DB.Interfaces;
 using KindBee.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
 using System.Diagnostics;
 using System.IO;
 
@@ -43,13 +45,13 @@ namespace KindBee.Controllers
             dal = new ProductDAL(dbContext);
 
         }
-
+        [Authorize(Roles = "admin")]
         [HttpGet(Name = "GetAllItems")]
         public IEnumerable<Product> Get()
         {
             return dal.Get();
         }
-
+        [Authorize(Roles = "admin")]
         [HttpGet("{id}", Name = "GetProduct")]
         public IActionResult Get(int Id)
         {
@@ -62,12 +64,13 @@ namespace KindBee.Controllers
 
             return new ObjectResult(Product);
         }
+        [Authorize(Roles = "admin")]
         [HttpGet]
         public IActionResult Create()
         {
             return View();
         }
-
+        [Authorize(Roles = "admin")]
         [HttpPost]
         public IActionResult Create(ProductVM Product)
         {
@@ -87,6 +90,7 @@ namespace KindBee.Controllers
             dal.Add(p);
             return RedirectToAction("Init","Admin");
         }
+        [Authorize(Roles = "admin")]
         [HttpGet]
         public IActionResult Update(int id)
         {
@@ -96,7 +100,7 @@ namespace KindBee.Controllers
 
             return View(vm);
         }
-
+        [Authorize(Roles = "admin")]
         [HttpPost]
         public IActionResult Update(ProductVM Product)
         {
@@ -124,7 +128,7 @@ namespace KindBee.Controllers
             dal.Update(p);
             return RedirectToAction("Init", "Admin");
         }
-
+        [Authorize(Roles = "admin")]
         [HttpPost]
         public IActionResult Delete(int Id)
         {

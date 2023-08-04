@@ -5,9 +5,9 @@
 
 <head>
     <link rel="stylesheet" href="~/css/groceryShowcase.css" />
+    <link rel="stylesheet" href="~/css/liquidButton.css" />
 
     <script type="text/jscript" src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
-
 </head>
 <div class="text-center">
     @if (Model == null || Model.Count==0)
@@ -73,8 +73,14 @@
     <h2>Общая сумма заказов: @ordersCommonSum р.</h2>
     }
 
-
-    <a href="@Url.Action("Index", "Home")">Перейти на главную</a>
+    <div class="liquidButtonContainer">
+        <a asp-area="" asp-controller="Home" asp-action="Index" class="btn-liquid">
+            <span class="inner">
+                На главную
+            </span>
+        </a>
+    </div>
+ 
 </div>
 <script type="text/jscript">
     function ReCountTotalSum() {
@@ -206,3 +212,4 @@
     };
 
 </script>
+<script type="text/jscript" src="/js/liquidButton.js" asp-append-version="true"></script>
