@@ -12,17 +12,97 @@ header {
 }
     .headerBlock a {
         text-decoration: none;
-        color: #333;
-        font-size: 20px;
-        padding: 10px;
+        color: black;
+        font-size: 100%;
+        /*        color: #333;
+        
+        padding: 10px;*/
     }
 
         .headerBlock a:hover {
-            font-size: 150%;
+            font-size: 110%;
             transition: 0.5s;
             text-decoration: none;
             color: black;
         }
+
+
+
+
+
+
+
+
+.site-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1%;
+}
+
+.logo img {
+    max-width: 100%;
+}
+
+.main-nav ul {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.main-nav li {
+    margin-right: 40px;
+    
+}
+
+@media(max-width: 500px) {
+    .site-header {
+        align-items: center;
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 5px;
+ 
+    }
+
+.logo {
+    margin-bottom: 10%;
+}
+
+    .main-nav {
+        margin-top: 20px;
+        margin: auto;
+    }
+
+        .main-nav ul {
+            align-items: center;
+            text-align: center;
+            flex-direction: column;
+            /*align-items: flex-start;*/
+        }
+
+        .main-nav li {
+            margin-right: 0;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+    .headerBlock a {
+        margin:auto;
+        text-decoration: none;
+        color: black;
+        font-size: 180%;
+        /*        color: #333;
+        
+        padding: 10px;*/
+    }
+
+        .headerBlock a:hover {
+            font-size: 190%;
+            transition: 0.5s;
+            text-decoration: none;
+            color: black;
+        }
+}
 
 
  

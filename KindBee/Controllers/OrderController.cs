@@ -44,7 +44,7 @@ namespace KindBee.Controllers
             productDAL = new ProductDAL(_kindBeeDBContext);
             _configuration = configuration;
         }
-        [Authorize(Roles = "customer")]
+        [Authorize(Roles = "customer, admin")]
         public async Task<IActionResult> Init()
         {
             int id;

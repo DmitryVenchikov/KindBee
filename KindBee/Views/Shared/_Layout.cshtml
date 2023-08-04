@@ -11,6 +11,9 @@
     <link rel="stylesheet" href="~/css/footer.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/header.css" asp-append-version="true" />
 </head>
+
+
+
 <body>
 
     @*    <header>
@@ -28,31 +31,45 @@
     </ul>
     </nav>
     </header>*@
-    <header>
-        <div class="container">
-            <div style="display: flex;
-  justify-content: space-between;
-  align-items: center;">
-                <div class=" headerBlock">
-                    <a asp-area="" asp-controller="Home" asp-action="Index">Главная</a>
-                </div>
-                <div class="headerBlock">
-                    <a asp-area="" asp-controller="Basket" asp-action="Init">Корзина</a>
-                </div>
-                <div class="headerBlock">
-                    <a asp-area="" asp-controller="Order" asp-action="Init">Мои заказы</a>
-                </div>
-                @*                <div   class="col-md-2 headerBlock">
-                <a asp-area="" asp-controller="Admin" asp-action="Init">Режим администратора</a>
-                </div>*@
-                <div id="Logout" class="headerBlock">
-                    <a asp-area="" asp-controller="Account" asp-action="Logout">Выйти</a>
-                </div>
-                <div id="LoginButton" class="headerBlock">
-                    <a  asp-area="" asp-controller="Account" asp-action="Login">Авторизоваться</a>
-                </div>
-            </div>
+    @* <header>
+    <div class="container">
+    <div style="display: flex;
+    justify-content: space-between;
+    align-items: center;">
+    <div class=" headerBlock">
+    <a asp-area="" asp-controller="Home" asp-action="Index">Главная</a>
+    </div>
+    <div class="headerBlock">
+    <a asp-area="" asp-controller="Basket" asp-action="Init">Корзина</a>
+    </div>
+    <div class="headerBlock">
+    <a asp-area="" asp-controller="Order" asp-action="Init">Мои заказы</a>
+    </div>
+
+    <div id="Logout" class="headerBlock">
+    <a asp-area="" asp-controller="Account" asp-action="Logout">Выйти</a>
+    </div>
+    <div id="LoginButton" class="headerBlock">
+    <a  asp-area="" asp-controller="Account" asp-action="Login">Авторизоваться</a>
+    </div>
+    </div>
+    </div>
+    </header>*@
+
+
+    <header class="site-header">
+        <div class="logo">
+            <img src="/gif/561007634.gif" alt="Logo">
         </div>
+        <nav class="main-nav">
+            <ul>
+                <li class="headerBlock"><a asp-area="" asp-controller="Home" asp-action="Index">Главная</a></li>
+                <li class="headerBlock"><a asp-area="" asp-controller="Basket" asp-action="Init">Корзина</a></li>
+                <li class="headerBlock"><a asp-area="" asp-controller="Order" asp-action="Init">Мои заказы</a></li>
+                <li id ="Logout" class="headerBlock"><a asp-area="" asp-controller="Account" asp-action="Logout">Выйти</a></li>
+                <li id="LoginButton" class="headerBlock"><a asp-area="" asp-controller="Account" asp-action="Login">Авторизоваться</a></li>
+            </ul>
+        </nav>
     </header>
     <div class="wrapper">
         <div class="container">
@@ -95,7 +112,7 @@
     </div>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-   
+
     <script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
